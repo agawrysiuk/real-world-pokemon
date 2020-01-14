@@ -5,5 +5,8 @@
     <string name="back4app_app_id">IAaie0HETvKdO9J8xVqXhvloyKx3f6is9atDTMQF</string>
     <string name="back4app_client_key">LDorJ3tuAHBhcpFjMMYgTuaRb1Xd1vnOi7R27nrW</string>
     <string name="welcome_text">Welcome to Pokemon World!</string>
+    <string name="welcome_hint_password">Password</string>
+    <string name="welcome_hint_email">Email</string>
+    <string name="welcome_login_button">Log in</string>
     <!-- Strings -->
 </resources>
