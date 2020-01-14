@@ -1,8 +1,11 @@
 package agawrysiuk.googlemapspokemonclone;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,16 +18,17 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView mIncorrectTxt, mNewUserTxt;
-    private EditText mUsernameTxt, mPasswordTxt;
+    TextView mWelcometxt, mIncorrectTxt, mNewUserTxt;
+    private EditText mUsernameTxt, mPasswordTxt, mEmailTxt;
     private Button mLoginBtn;
+    private ConstraintLayout mConstraintLayout;
 
     private boolean isLoggingIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_login);
 
         // == sending information about installation ==
         ParseInstallation.getCurrentInstallation().saveInBackground();
@@ -38,11 +42,14 @@ public class MainActivity extends AppCompatActivity {
         isLoggingIn = true;
 
         // == finding views ==
+        mWelcometxt = findViewById(R.id.welcomeTV);
         mIncorrectTxt = findViewById(R.id.incorrectTxtView);
         mNewUserTxt = findViewById(R.id.newUserTxtView);
         mUsernameTxt = findViewById(R.id.usernameEdtTxt);
         mPasswordTxt = findViewById(R.id.passwordEdtTxt);
+        mEmailTxt = findViewById(R.id.emailEdtTxt);
         mLoginBtn = findViewById(R.id.loginBtn);
+        mConstraintLayout = findViewById(R.id.welcomeLayout);
 
         // == clicking login / signup button ==
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -64,13 +71,27 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoggingIn) {
-                    // == login view, we move to sign up view ==
-                    mIncorrectTxt.setVisibility(View.INVISIBLE);
+                // == we hide error text just in case ==
+                mIncorrectTxt.setVisibility(View.INVISIBLE);
 
-                } else {
-                    // == signup view, we move to login view ==
-                }
+                // == transition manager animates the layout ==
+                TransitionManager.beginDelayedTransition(mConstraintLayout);
+
+                // == creating two different layouts to apply ==
+                ConstraintSet constraintGoingToSignup = new ConstraintSet();
+                constraintGoingToSignup.clone(MainActivity.this,R.layout.activity_main_signup);
+                ConstraintSet constraintGoingToLogin = new ConstraintSet();
+                constraintGoingToLogin.clone(MainActivity.this,R.layout.activity_main_login);
+
+                // == setting the layout to the root ==
+                ConstraintSet constraint = isLoggingIn? constraintGoingToSignup : constraintGoingToLogin;
+                constraint.applyTo(mConstraintLayout);
+
+                // == changing texts ==
+                mLoginBtn.setText(isLoggingIn ? R.string.welcome_signup_button : R.string.welcome_login_button);
+                mNewUserTxt.setText(isLoggingIn? R.string.welcome_existing_user_text : R.string.welcome_new_user_text);
+
+                isLoggingIn = !isLoggingIn;
             }
         };
     }

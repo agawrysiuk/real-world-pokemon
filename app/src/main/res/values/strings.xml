@@ -7,8 +7,11 @@
     <!-- Strings -->
     <string name="welcome_text">Welcome to Pokemon World!</string>
     <string name="welcome_hint_password">Password</string>
-    <string name="welcome_hint_email">Username</string>
+    <string name="welcome_hint_username">Username</string>
+    <string name="welcome_hint_email">Email</string>
     <string name="welcome_login_button">Log in</string>
     <string name="welcome_incorrect_login_text">Incorrect username or password!</string>
     <string name="welcome_new_user_text">I am a new user</string>
+    <string name="welcome_existing_user_text">I already have an account</string>
+    <string name="welcome_signup_button">Sign up</string>
 </resources>

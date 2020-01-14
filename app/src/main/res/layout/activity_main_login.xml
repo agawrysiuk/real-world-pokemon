@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/welcomeLayout">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/pkmn_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
@@ -26,7 +27,7 @@
         android:text="@string/welcome_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/pkmn_logo" />
 
     <EditText
         android:id="@+id/usernameEdtTxt"
@@ -34,8 +35,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:ems="10"
+        android:hint="@string/welcome_hint_username"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeTV" />
+
+    <EditText
+        android:id="@+id/emailEdtTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:ems="10"
         android:hint="@string/welcome_hint_email"
         android:inputType="textEmailAddress"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeTV" />
