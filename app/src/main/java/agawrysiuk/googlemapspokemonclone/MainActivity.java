@@ -15,6 +15,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
+        ParseUser.logOut();
 
         // == sending information about installation ==
         ParseInstallation.getCurrentInstallation().saveInBackground();
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 // == changing texts ==
                 mLoginBtn.setText(isLoggingIn ? R.string.welcome_signup_button : R.string.welcome_login_button);
                 mNewUserTxt.setText(isLoggingIn? R.string.welcome_existing_user_text : R.string.welcome_new_user_text);
+                mIncorrectTxt.setText(isLoggingIn? R.string.welcome_incorrect_signup_text : R.string.welcome_incorrect_login_text);
 
                 isLoggingIn = !isLoggingIn;
             }
@@ -110,6 +113,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void wantsToSignup() {
+        final ParseUser user = new ParseUser();
+        user.setUsername(mUsernameTxt.getText().toString());
+        user.setPassword(mPasswordTxt.getText().toString());
+        user.setEmail(mEmailTxt.getText().toString());
+        user.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done (ParseException e) {
+                if (e == null) {
+                    transitionToMap();
+                } else {
+                    mIncorrectTxt.setVisibility(View.VISIBLE);
+                }}});
 
     }
 
