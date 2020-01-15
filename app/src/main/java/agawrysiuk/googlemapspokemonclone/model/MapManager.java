@@ -1,7 +1,6 @@
 package agawrysiuk.googlemapspokemonclone.model;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -14,12 +13,16 @@ public class MapManager {
 
     public MapManager(Context context) {
         this.context = context;
-        this.playersIcon = createMapIcons(R.drawable.player_back);
+        this.playersIcon = createMapIcon(R.drawable.player_back);
     }
 
-    public Bitmap createMapIcons(int iconDrawable){
+    public Bitmap createMapIcon(int iconDrawable){
         Bitmap imageBitmap = BitmapFactory.decodeResource(context.getResources(), iconDrawable);
-        return Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth() * RESIZE_MULTIPLIER, imageBitmap.getHeight() * RESIZE_MULTIPLIER, false);
+        return Bitmap.createScaledBitmap(
+                imageBitmap,
+                imageBitmap.getWidth(),
+                imageBitmap.getHeight(),
+                false);
     }
 
     public Bitmap getPlayersIcon() {
