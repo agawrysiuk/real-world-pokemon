@@ -1,19 +1,17 @@
 package agawrysiuk.googlemapspokemonclone;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -26,19 +24,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.ParseUser;
-
-import java.util.Arrays;
 
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, SensorEventListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, SensorEventListener {
 
     private static final int LOCATION_REQUEST_CODE = 1000;
 
@@ -49,6 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationListener mLocationListener;
 
     private float rotation = 0;
+    private boolean isFirstMapLoad = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,21 +152,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // == update players location ==
     private void updateYourLocation(Location location) {
         LatLng yourLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.clear();
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yourLocation, 20));
+        float zoom = 18.5f;
+        // == we use .moveCamera it so we can quickly load the map around us, for the rest we use .animateCamera ==
+        if (isFirstMapLoad) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yourLocation,zoom));
+            isFirstMapLoad = false;
+        }
+        // == changing camera position ==
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(yourLocation)             // Sets the center of the map to current location
-                .zoom(15)                   // Sets the zoom
-                .bearing(rotation) // Sets the orientation of the camera to east
-                .tilt(0)                   // Sets the tilt of the camera to 0 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yourLocation,18));
-        mMap.addMarker(
-                new MarkerOptions()
-                        .position(yourLocation)
-                        .title(ParseUser.getCurrentUser().getUsername())
-                        .icon(BitmapDescriptorFactory.fromBitmap(mMapManager.getPlayersIcon())));
+                .zoom(zoom)                       // Sets the zoom
+                .bearing(rotation)                // Sets the orientation of the camera
+                .tilt(20)                          // Sets the tilt of the camera to 0 degrees
+                .build();                         // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 900, new GoogleMap.CancelableCallback() {
+            // == we need to implement this interface because we want to use the overloaded version of .animateCamera ==
+            // == if we use the regular one, the app will wait for the animateCamera to finish before it loads the background ==
+            // == in many cases it doesn't have time to do it, so we need to set up animation time (second argument) ==
+            // == there is also a third argument, so that's why we need to implement it; it can be empty ==
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        // == removed Marker adding because the player is displayed on the view now ==
+//        mMap.clear();
+//        mMap.addMarker(
+//                new MarkerOptions()
+//                        .position(yourLocation)
+//                        .title(ParseUser.getCurrentUser().getUsername())
+//                        .icon(BitmapDescriptorFactory.fromBitmap(mMapManager.getPlayersIcon())));
 
 
     }
