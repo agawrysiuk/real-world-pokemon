@@ -8,8 +8,6 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,10 +23,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseUser;
 
+import agawrysiuk.googlemapspokemonclone.model.MapManager;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_REQUEST_CODE = 1000;
-    private static final int RESIZE_MULTIPLIER = 7;
+
+    private MapManager mMapManager;
 
     private GoogleMap mMap;
     private LocationManager mLocationManager;
@@ -38,6 +39,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        //create a map manager for help purposes
+        mMapManager = new MapManager(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -118,14 +121,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 new MarkerOptions()
                         .position(yourLocation)
                         .title(ParseUser.getCurrentUser().getUsername())
-                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.player_back))));
+                        .icon(BitmapDescriptorFactory.fromBitmap(mMapManager.getPlayersIcon())));
 
 
-    }
-
-    public Bitmap resizeMapIcons(int iconDrawable){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(MapsActivity.this.getResources(),iconDrawable);
-//        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
-        return Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth() * RESIZE_MULTIPLIER, imageBitmap.getHeight() * RESIZE_MULTIPLIER, false);
     }
 }
