@@ -1,8 +1,10 @@
 package agawrysiuk.googlemapspokemonclone;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.view.ViewCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -57,17 +59,17 @@ public class MainActivity extends AppCompatActivity {
         mConstraintLayout = findViewById(R.id.welcomeLayout);
 
         // == set up ENTER to automatically log in ==
-        mPasswordTxt.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER
-                        && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    hideKeyboard(v);
-                    mLoginBtn.callOnClick();
-                }
-                return false;
-            }
-        });
+//        mPasswordTxt.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if (keyCode == KeyEvent.KEYCODE_ENTER
+//                        && event.getAction() == KeyEvent.ACTION_DOWN) {
+//                    hideKeyboard(v);
+//                    mLoginBtn.callOnClick();
+//                }
+//                return false;
+//            }
+//        });
 
 
         // == clicking login / signup button ==

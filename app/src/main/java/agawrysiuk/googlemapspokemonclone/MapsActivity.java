@@ -7,7 +7,14 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.hardware.GeomagneticField;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,14 +28,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseUser;
 
+import java.util.Arrays;
+
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, SensorEventListener {
 
     private static final int LOCATION_REQUEST_CODE = 1000;
 
@@ -37,6 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
+
+    private float rotation = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +60,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // == adding rotation sensors
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        sensorManager.registerListener(this, rotationSensor,
+                SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        // == saving rotation sensor value ==
+        if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
+            rotation = (float) Math.toDegrees(-event.values[2]);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 
     /**
      * Manipulates the map once available.
@@ -75,7 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // == map UI settings ==
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setAllGesturesEnabled(false);
 
         // == setting up manager and listener ==
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -101,21 +131,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // == request gps access ==
         if (Build.VERSION.SDK_INT < 23) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 12, 0, mLocationListener);
         } else if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             } else {
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 12, 0, mLocationListener);
                 Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 updateYourLocation(location);
             }
         }
-
-        // == set up zoom settings ==
-        CameraUpdateFactory.zoomTo(20);
-        mMap.setMaxZoomPreference(30);
-        mMap.setMinZoomPreference(10);
     }
 
     @Override
@@ -124,7 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // == after request gps ==
         if (requestCode == 1000 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 12, 0, mLocationListener);
                 Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 updateYourLocation(location);
             }
@@ -136,7 +161,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng yourLocation = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.clear();
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yourLocation, 20));
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(yourLocation));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(yourLocation)             // Sets the center of the map to current location
+                .zoom(15)                   // Sets the zoom
+                .bearing(rotation) // Sets the orientation of the camera to east
+                .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yourLocation,18));
         mMap.addMarker(
                 new MarkerOptions()
                         .position(yourLocation)
