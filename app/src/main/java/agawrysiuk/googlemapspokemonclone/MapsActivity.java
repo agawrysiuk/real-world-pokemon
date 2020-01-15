@@ -19,6 +19,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,9 +32,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.ParseUser;
 
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
+import agawrysiuk.googlemapspokemonclone.support.TypeTextView;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, SensorEventListener {
 
@@ -43,6 +45,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
+
+    private TypeTextView mTypeTextView;
+    private ImageView mBubbleSpeechView;
 
     private float rotation = 0;
     private boolean isFirstMapLoad = true;
@@ -58,11 +63,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // == setting up speech bubble ==
+        mTypeTextView = findViewById(R.id.typeText);
+        mTypeTextView.setOnClickListener(hideBubbleSpeech());
+        mBubbleSpeechView = findViewById(R.id.bubbleSpeech);
+        mBubbleSpeechView.setOnClickListener(hideBubbleSpeech());
+
         // == adding rotation sensors
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         sensorManager.registerListener(this, rotationSensor,
                 SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    private View.OnClickListener hideBubbleSpeech() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTypeTextView.setVisibility(View.INVISIBLE);
+                mBubbleSpeechView.setVisibility(View.INVISIBLE);
+            }
+        };
     }
 
     @Override
@@ -150,7 +171,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
+                mBubbleSpeechView.setVisibility(View.VISIBLE);
+                mTypeTextView
+                        .setVisible()
+                        .setTextAttr("POKEMON: AAARGH!\n...\n...")
+                        .animateTypeText();
                 // == return true for the event to consume the default behavior; false to make default behavior as well ==
                 return true;
             }

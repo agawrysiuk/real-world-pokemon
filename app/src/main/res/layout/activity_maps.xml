@@ -28,30 +28,31 @@
         app:srcCompat="@drawable/player_back" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/bubbleSpeech"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/map"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/speech_background" />
 
-    <TextView
-        android:id="@+id/textView"
+    <agawrysiuk.googlemapspokemonclone.support.TypeTextView
+        android:id="@+id/typeText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="48dp"
-        android:autoText="false"
         android:freezesText="false"
         android:lineSpacingExtra="10sp"
-        android:text="ASH: Do you think you can beat me?"
+        android:text=""
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/bubbleSpeech"
+        app:layout_constraintEnd_toEndOf="@+id/bubbleSpeech"
+        app:layout_constraintStart_toStartOf="@+id/bubbleSpeech"
+        app:layout_constraintTop_toTopOf="@+id/bubbleSpeech" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

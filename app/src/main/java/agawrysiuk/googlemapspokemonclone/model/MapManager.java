@@ -28,4 +28,5 @@ public class MapManager {
     public Bitmap getPlayersIcon() {
         return playersIcon;
     }
+
 }
