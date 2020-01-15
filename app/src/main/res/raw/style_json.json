@@ -9,7 +9,7 @@
     ]
   },
   {
-    "featureType": "poi",
+    "featureType": "poi.business",
     "stylers": [
       {
         "visibility": "off"

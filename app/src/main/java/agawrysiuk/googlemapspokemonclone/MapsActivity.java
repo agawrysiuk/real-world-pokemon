@@ -19,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -67,12 +68,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // == set up map style ==
         boolean success = googleMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
-                        this, R.raw.style_json_dark));
+                        this, R.raw.style_json));
         if (!success) {
             Log.e("MAP STYLE", "Style parsing failed.");
         }
 
-
+        // == map UI settings ==
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
 
         // == setting up manager and listener ==
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -109,6 +112,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
+        // == set up zoom settings ==
+        CameraUpdateFactory.zoomTo(20);
+        mMap.setMaxZoomPreference(30);
+        mMap.setMinZoomPreference(10);
     }
 
     @Override
@@ -128,7 +135,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateYourLocation(Location location) {
         LatLng yourLocation = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.clear();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yourLocation, 20));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yourLocation, 20));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(yourLocation));
         mMap.addMarker(
                 new MarkerOptions()
                         .position(yourLocation)
