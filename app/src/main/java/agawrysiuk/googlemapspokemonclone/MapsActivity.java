@@ -24,9 +24,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseUser;
 
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
 
@@ -134,6 +138,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 updateYourLocation(location);
             }
         }
+
+        // == test pokemon markers
+        LatLng pkmnLocation = new LatLng(52.2310, 21.0067);
+        mMap.clear();
+        MarkerOptions marker = new MarkerOptions()
+                .position(pkmnLocation)
+                .title("Pokemon")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pokemon_icon));
+        mMap.addMarker(marker);
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                // == return true for the event to consume the default behavior; false to make default behavior as well ==
+                return true;
+            }
+        });
     }
 
     @Override
@@ -181,12 +202,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         // == removed Marker adding because the player is displayed on the view now ==
-//        mMap.clear();
-//        mMap.addMarker(
-//                new MarkerOptions()
-//                        .position(yourLocation)
-//                        .title(ParseUser.getCurrentUser().getUsername())
-//                        .icon(BitmapDescriptorFactory.fromBitmap(mMapManager.getPlayersIcon())));
 
 
     }
