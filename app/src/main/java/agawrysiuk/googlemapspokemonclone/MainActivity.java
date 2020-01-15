@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.View;
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void transitionToMap() {
-        //we move to new intent here
+        startActivity(new Intent(MainActivity.this,MapsActivity.class));
         finish();
     }
 }

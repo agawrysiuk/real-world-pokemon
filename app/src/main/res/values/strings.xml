@@ -15,4 +15,5 @@
     <string name="welcome_new_user_text">I am a new user</string>
     <string name="welcome_existing_user_text">I already have an account</string>
     <string name="welcome_signup_button">Sign up</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
