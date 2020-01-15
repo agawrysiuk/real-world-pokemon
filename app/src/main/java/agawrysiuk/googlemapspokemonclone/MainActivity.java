@@ -7,7 +7,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
-        ParseUser.logOut();
+//        ParseUser.logOut();
 
         // == sending information about installation ==
         ParseInstallation.getCurrentInstallation().saveInBackground();
@@ -53,6 +55,20 @@ public class MainActivity extends AppCompatActivity {
         mEmailTxt = findViewById(R.id.emailEdtTxt);
         mLoginBtn = findViewById(R.id.loginBtn);
         mConstraintLayout = findViewById(R.id.welcomeLayout);
+
+        // == set up ENTER to automatically log in ==
+        mPasswordTxt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER
+                        && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    hideKeyboard(v);
+                    mLoginBtn.callOnClick();
+                }
+                return false;
+            }
+        });
+
 
         // == clicking login / signup button ==
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +145,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void transitionToMap() {
+    // == hiding keyboard when root layout is tapped
+    public void hideKeyboard(View view) {
+        try {
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        } catch (NullPointerException e) {
+            //do nothing?
+        }
+    }
+
+        private void transitionToMap() {
         startActivity(new Intent(MainActivity.this,MapsActivity.class));
         finish();
     }
