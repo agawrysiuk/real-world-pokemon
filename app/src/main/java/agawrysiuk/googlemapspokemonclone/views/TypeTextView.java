@@ -84,8 +84,9 @@ public class TypeTextView extends TextView {
     }
 
     // == setter for the listener ==
-    public void setOnTypeTextViewFinishedListener(TypeTextView.OnTypeTextViewFinished listener) {
+    public TypeTextView setOnTypeTextViewFinishedListener(TypeTextView.OnTypeTextViewFinished listener) {
         this.listener = listener;
+        return this;
     }
 
     // == listener ==

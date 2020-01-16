@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FightActivity"
-    android:id="@+id/fightLayout">
+    android:id="@+id/fightLayout"
+    android:onClick="onScreenTapped">
 
     <ImageView
         android:id="@+id/fightSpeechImage"

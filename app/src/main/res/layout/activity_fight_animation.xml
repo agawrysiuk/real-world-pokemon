@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FightActivity"
-    android:id="@+id/fightLayout">
+    android:id="@+id/fightLayout"
+    android:onClick="onScreenTapped">
 
     <ImageView
         android:id="@+id/fightSpeechImage"
@@ -73,4 +74,5 @@
         app:layout_constraintEnd_toEndOf="@+id/fightSpeechImage"
         app:layout_constraintStart_toStartOf="@+id/fightSpeechImage"
         app:layout_constraintTop_toTopOf="@+id/fightSpeechImage" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
