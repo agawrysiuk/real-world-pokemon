@@ -35,7 +35,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
-import agawrysiuk.googlemapspokemonclone.support.TypeTextView;
+import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, SensorEventListener {
 

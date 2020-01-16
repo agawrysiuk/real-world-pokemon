@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/speech_background" />
 
-    <agawrysiuk.googlemapspokemonclone.support.TypeTextView
+    <agawrysiuk.googlemapspokemonclone.views.TypeTextView
         android:id="@+id/typeText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
