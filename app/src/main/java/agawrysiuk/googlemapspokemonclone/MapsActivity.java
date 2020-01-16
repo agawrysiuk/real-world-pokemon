@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -39,6 +40,9 @@ import agawrysiuk.googlemapspokemonclone.support.TypeTextView;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, SensorEventListener {
 
     private static final int LOCATION_REQUEST_CODE = 1000;
+    //NETWORK_PROVIDER for real device
+    //GPS_PROVIDER for emulator
+    private static final String PROVIDER_FOR_GPS = LocationManager.GPS_PROVIDER;
 
     private MapManager mMapManager;
 
@@ -49,8 +53,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TypeTextView mTypeTextView;
     private ImageView mBubbleSpeechView;
 
+    // == for the first location update
     private float rotation = 0;
     private boolean isFirstMapLoad = true;
+
+    // == for the new activity to start ==
+    private boolean isReadyToFight = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +73,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // == setting up speech bubble ==
         mTypeTextView = findViewById(R.id.typeText);
-        mTypeTextView.setOnClickListener(hideBubbleSpeech());
+        mTypeTextView.setOnClickListener(hideBubbleStartFight());
         mBubbleSpeechView = findViewById(R.id.bubbleSpeech);
-        mBubbleSpeechView.setOnClickListener(hideBubbleSpeech());
+        mBubbleSpeechView.setOnClickListener(hideBubbleStartFight());
 
         // == adding rotation sensors
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -76,12 +84,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
     }
 
-    private View.OnClickListener hideBubbleSpeech() {
+    private View.OnClickListener hideBubbleStartFight() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mTypeTextView.setVisibility(View.INVISIBLE);
                 mBubbleSpeechView.setVisibility(View.INVISIBLE);
+                startActivity(new Intent(MapsActivity.this,FightActivity.class));
+                isReadyToFight = false;
             }
         };
     }
@@ -99,15 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    // == when the map is ready ==
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -149,13 +151,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // == request gps access ==
         if (Build.VERSION.SDK_INT < 23) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 12, 0, mLocationListener);
+            mLocationManager.requestLocationUpdates(PROVIDER_FOR_GPS, 0, 0, mLocationListener);
         } else if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             } else {
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 12, 0, mLocationListener);
-                Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                mLocationManager.requestLocationUpdates(PROVIDER_FOR_GPS, 0, 0, mLocationListener);
+                Location location = mLocationManager.getLastKnownLocation(PROVIDER_FOR_GPS);
                 updateYourLocation(location);
             }
         }
@@ -172,10 +174,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onMarkerClick(Marker marker) {
                 mBubbleSpeechView.setVisibility(View.VISIBLE);
+                // == animate text ==
                 mTypeTextView
                         .setVisible()
                         .setTextAttr("POKEMON: AAARGH!\n...\n...")
                         .animateTypeText();
+                isReadyToFight = true;
                 // == return true for the event to consume the default behavior; false to make default behavior as well ==
                 return true;
             }
@@ -188,8 +192,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // == after request gps ==
         if (requestCode == 1000 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 12, 0, mLocationListener);
-                Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                mLocationManager.requestLocationUpdates(PROVIDER_FOR_GPS, 0, 0, mLocationListener);
+                Location location = mLocationManager.getLastKnownLocation(PROVIDER_FOR_GPS);
                 updateYourLocation(location);
             }
         }
