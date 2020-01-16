@@ -9,10 +9,14 @@ import android.os.Handler;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+
+import agawrysiuk.googlemapspokemonclone.support.TypeTextView;
 
 public class FightActivity extends AppCompatActivity {
 
     private ConstraintLayout mFightLayout;
+    private TypeTextView mFightTyper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +24,10 @@ public class FightActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fight);
 
         mFightLayout = findViewById(R.id.fightLayout);
+        mFightTyper = findViewById(R.id.fightTyper);
 
+        // == Start First Animation
         final Handler mHandler = new Handler();
-        // == using recurrence to type text ==
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -32,10 +37,11 @@ public class FightActivity extends AppCompatActivity {
                 final ConstraintSet constraint = new ConstraintSet();
                 constraint.clone(FightActivity.this, R.layout.activity_fight_end);
                 constraint.applyTo(mFightLayout);
+                mFightTyper
+                        .setTextAttr("Wild Bulbasaur appears!")
+                        .animateTypeText();
             }
         };
-
-        // == animating the layout ==
         mFightLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -43,5 +49,6 @@ public class FightActivity extends AppCompatActivity {
                 mHandler.postDelayed(runnable, 10);
             }
         });
+
     }
 }

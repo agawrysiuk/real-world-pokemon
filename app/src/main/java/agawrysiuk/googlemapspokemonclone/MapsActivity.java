@@ -176,7 +176,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mBubbleSpeechView.setVisibility(View.VISIBLE);
                 // == animate text ==
                 mTypeTextView
-                        .setVisible()
+                        .setVisible(true)
                         .setTextAttr("POKEMON: AAARGH!\n...\n...")
                         .animateTypeText();
                 isReadyToFight = true;

@@ -15,17 +15,29 @@ import androidx.appcompat.widget.AppCompatTextView;
 @SuppressLint("AppCompatCustomView")
 public class TypeTextView extends TextView {
 
+    // == custom listener for the view ==
+    private OnTypeTextViewFinished listener = null;
+
+    // == class fields ==
     private CharSequence text;
     private int index;
     private int delay = 25;
+
+    // == creating handler to start typing
     private Handler mHandler = new Handler();
     // == using recurrence to type text ==
     private Runnable characterAdder = new Runnable() {
         @Override
         public void run() {
             setText(text.subSequence(0, index++));
+            // == we type the text
             if(index <= text.length()) {
                 mHandler.postDelayed(characterAdder, delay);
+            // == we call for the listener if it's available after the typer has finished its job ==
+            } else {
+                if (listener != null) {
+                    listener.onTyperFinished();
+                }
             }
         }
     };
@@ -39,21 +51,25 @@ public class TypeTextView extends TextView {
         super(context, attrs);
     }
 
+    // == set up text to type ==
     public TypeTextView setTextAttr(CharSequence  text) {
         this.text = text;
         return this;
     }
 
+    // == change the delay value between characters ==
     public TypeTextView setDelayAttr(int delay) {
         this.delay = delay;
         return this;
     }
 
-    public TypeTextView setVisible() {
-        this.setVisibility(VISIBLE);
+    // == if we want to change the visibility ==
+    public TypeTextView setVisible(boolean isVisible) {
+        this.setVisibility(isVisible? VISIBLE : INVISIBLE);
         return this;
     }
 
+    // == starts animating text ==
     public void animateTypeText() {
         index = 0;
         setText("");
@@ -62,5 +78,13 @@ public class TypeTextView extends TextView {
         mHandler.postDelayed(characterAdder, delay);
     }
 
+    // == setter for the listener ==
+    public void setOnTypeTextViewFinishedListener(TypeTextView.OnTypeTextViewFinished listener) {
+        this.listener = listener;
+    }
 
+    // == listener ==
+    public interface OnTypeTextViewFinished {
+        void onTyperFinished();
+    }
 }

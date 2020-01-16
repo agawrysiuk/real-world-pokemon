@@ -56,4 +56,22 @@
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fightEnemyBarImage"
         app:srcCompat="@drawable/pokemon_001" />
+
+    <agawrysiuk.googlemapspokemonclone.support.TypeTextView
+        android:id="@+id/fightTyper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="40dp"
+        android:freezesText="false"
+        android:lineSpacingExtra="10sp"
+        android:text=""
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/fightSpeechImage"
+        app:layout_constraintEnd_toEndOf="@+id/fightSpeechImage"
+        app:layout_constraintStart_toStartOf="@+id/fightSpeechImage"
+        app:layout_constraintTop_toTopOf="@+id/fightSpeechImage" />
 </androidx.constraintlayout.widget.ConstraintLayout>
