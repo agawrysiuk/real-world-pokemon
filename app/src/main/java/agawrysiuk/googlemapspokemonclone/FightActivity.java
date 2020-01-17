@@ -23,7 +23,7 @@ public class FightActivity extends AppCompatActivity {
 
     private enum FightStages {
         START_TEXT,
-        HERO_POKEMON,OPPONENT_POKEMON,
+        HERO_POKEMON, OPPONENT_POKEMON,
         ACTUAL_FIGHT,
         POKEBALL, //only for pokemons
         END_TEXT;
@@ -49,7 +49,7 @@ public class FightActivity extends AppCompatActivity {
                 // == changing constraints (moving views on the layout) ==
                 Transition autoTransition = new AutoTransition();
                 autoTransition.setDuration(1000);
-                TransitionManager.beginDelayedTransition(mFightLayout,autoTransition);
+                TransitionManager.beginDelayedTransition(mFightLayout, autoTransition);
                 final ConstraintSet constraint = new ConstraintSet();
                 constraint.clone(FightActivity.this, R.layout.activity_fight_animation);
                 constraint.applyTo(mFightLayout);
@@ -82,6 +82,14 @@ public class FightActivity extends AppCompatActivity {
     }
 
     public void onScreenTapped(View view) {
+        switch (mStage) {
+            case START_TEXT:
+                return;
+            case POKEBALL:
+                writeText("Throw pokeball?");
+            default:
+                return;
+        }
         // == it's a root layout that will navigate between the stages
 //        writeText("Test id " + ++testId);
     }
