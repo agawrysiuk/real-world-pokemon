@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -108,24 +111,23 @@ public class FightActivity extends AppCompatActivity {
 
     private void throwPokeball() {
         // == creating view object ==
-        ImageView pkbl = new ImageView(this);
+        final ImageView pkbl = new ImageView(this);
         pkbl.setBackgroundResource(R.drawable.pokeball_center);
         // == adding it to the root layout ==
         mFightLayout.addView(pkbl);
-        // == generating id (if it's not here, the view will carsh on getId() ==
-        pkbl.setId(View.generateViewId());
 
-        // == setting up constraints ==
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(mFightLayout);
-        constraintSet.connect(pkbl.getId(), ConstraintSet.START, mPlayerPicture.getId(), ConstraintSet.START, 0);
-        constraintSet.connect(pkbl.getId(), ConstraintSet.END, mPlayerPicture.getId(), ConstraintSet.END, 0);
-        constraintSet.connect(pkbl.getId(), ConstraintSet.TOP, mPlayerPicture.getId(), ConstraintSet.TOP, 0);
-        constraintSet.connect(pkbl.getId(), ConstraintSet.BOTTOM, mPlayerPicture.getId(), ConstraintSet.BOTTOM, 0);
-        constraintSet.constrainDefaultHeight(pkbl.getId(), ConstraintSet.WRAP_CONTENT);
-        constraintSet.constrainDefaultWidth(pkbl.getId(), ConstraintSet.WRAP_CONTENT);
-        constraintSet.applyTo(mFightLayout);
-
+        // == animating pokeball ==
+        Path path = new Path();
+        path.moveTo(
+                mPlayerPicture.getX() + (float) mPlayerPicture.getWidth() / 4, //starting X
+                mPlayerPicture.getY() + (float) mPlayerPicture.getHeight() / 4); //starting Y
+        path.quadTo(mFightLayout.getWidth() / 2, //curve's X
+                mFightLayout.getHeight() / 8, //curve's Y
+                mEnemyPicture.getX() + (float) mEnemyPicture.getWidth() / 3, //end X
+                mEnemyPicture.getY() + (float) mEnemyPicture.getHeight() / 3); //end Y
+        ValueAnimator a = ObjectAnimator.ofFloat(pkbl, "x", "y", path);
+        a.setDuration(750);
+        a.start();
     }
 
     private void jigglePokeball() {
