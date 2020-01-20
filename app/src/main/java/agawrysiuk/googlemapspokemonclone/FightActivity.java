@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.AutoTransition;
@@ -27,15 +30,15 @@ public class FightActivity extends AppCompatActivity {
 
     private enum FightStages {
         START_TEXT,
-        HERO_POKEMON, OPPONENT_POKEMON,
-        ACTUAL_FIGHT,
+        HERO_POKEMON, OPPONENT_POKEMON, // for the future opening fight implementation
+        ACTUAL_FIGHT, //for the future fight implementation
         POKEBALL, //only for pokemons
-        END_TEXT;
+        END_TEXT; //when we win/catch pokemon
     }
 
     private ConstraintLayout mFightLayout;
     private TypeTextView mFightTyper;
-    private ImageView mPokeballAnim,mEnemyPicture,mPlayerPicture;
+    private ImageView mPokeballAnim, mEnemyPicture, mPlayerPicture;
     private FightStages mStage = FightStages.START_TEXT;
 
     @Override
@@ -110,10 +113,9 @@ public class FightActivity extends AppCompatActivity {
     }
 
     private void throwPokeball() {
-        // == creating view object ==
+        // == creating pokeball object ==
         final ImageView pkbl = new ImageView(this);
         pkbl.setBackgroundResource(R.drawable.pokeball_center);
-        // == adding it to the root layout ==
         mFightLayout.addView(pkbl);
 
         // == animating pokeball ==
@@ -127,7 +129,34 @@ public class FightActivity extends AppCompatActivity {
                 mEnemyPicture.getY() + (float) mEnemyPicture.getHeight() / 3); //end Y
         ValueAnimator a = ObjectAnimator.ofFloat(pkbl, "x", "y", path);
         a.setDuration(750);
+        a.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mFightLayout.removeView(pkbl);
+                pokeballPoof();
+            }
+        });
         a.start();
+    }
+
+    private void pokeballPoof() {
+        // == animating explosion ==
+        final ImageView expl = new ImageView(this);
+        expl.setX(mEnemyPicture.getX());
+        expl.setY(mEnemyPicture.getY());
+        mFightLayout.addView(expl);
+        expl.setBackgroundResource(R.drawable.animation_pokeball_poof);
+        AnimationDrawable animation = (AnimationDrawable) expl.getBackground();
+        animation.setVisible(true, true);
+        animation.start();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFightLayout.removeView(expl);
+            }
+        }, 400);
     }
 
     private void jigglePokeball() {
