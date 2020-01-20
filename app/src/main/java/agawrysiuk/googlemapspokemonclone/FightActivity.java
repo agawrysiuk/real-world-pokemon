@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -36,16 +37,20 @@ public class FightActivity extends AppCompatActivity {
         START_TEXT,
         HERO_POKEMON, OPPONENT_POKEMON, // for the future opening fight implementation
         ACTUAL_FIGHT, //for the future fight implementation
-        POKEBALL_THROW, //only for pokemons
-        END_TEXT; //when we win/catch pokemon
+        POKEBALL_INFO, POKEBALL_THROW, //only for pokemons
+        END_TEXT, //when we win/catch pokemon
+        EXIT;
     }
 
     private ConstraintLayout mFightLayout;
     private TypeTextView mFightTyper;
+    private TextView mTextName;
     private ImageView mPokeballAnim, mEnemyPicture, mPlayerPicture;
     private FightStages mStage = FightStages.START_TEXT;
     private boolean lockScreen = true;
+    private int pokeballsLeft = 10;
     private int catchChance = 50;
+    boolean caught = false;
     private static final int CATCH_SIZE = 100;
 
     @Override
@@ -59,6 +64,7 @@ public class FightActivity extends AppCompatActivity {
         mPokeballAnim.setBackgroundResource(R.drawable.animation_pokeball_jiggle);
         mEnemyPicture = findViewById(R.id.fightEnemyPicture);
         mPlayerPicture = findViewById(R.id.fightPlayerBackImage);
+        mTextName = findViewById(R.id.txtName); //later to implement name here
 
         // == Start First Animation
         final Runnable runnable = new Runnable() {
@@ -81,7 +87,8 @@ public class FightActivity extends AppCompatActivity {
                         .setOnTypeTextViewFinishedListener(new TypeTextView.OnTypeTextViewFinished() {
                             @Override
                             public void onTyperFinished() {
-                                mStage = FightStages.POKEBALL_THROW;
+                                mFightTyper.removeOnTypeTextViewFinishedListener();
+                                mStage = FightStages.POKEBALL_INFO;
                                 lockScreen = false;
                             }
                         })
@@ -107,11 +114,29 @@ public class FightActivity extends AppCompatActivity {
         switch (mStage) {
             case START_TEXT:
                 return;
+            case POKEBALL_INFO:
+                mStage = FightStages.POKEBALL_THROW;
+                writeText(pokeballsLeft + " pokeballs left. Throw pokeball?");
+                break;
             case POKEBALL_THROW:
                 lockScreen = true;
                 throwPokeball();
 //                jigglePokeball();
 //                writeText("Throw pokeball?");
+                break;
+            case EXIT:
+                lockScreen = true;
+                mFightTyper.setOnTypeTextViewFinishedListener(new TypeTextView.OnTypeTextViewFinished() {
+                    @Override
+                    public void onTyperFinished() {
+                        finish();
+                    }
+                });
+                if (!caught) {
+                    writeText("Got away safely!");
+                } else {
+                    writeText("");
+                }
             default:
                 return;
         }
@@ -125,6 +150,17 @@ public class FightActivity extends AppCompatActivity {
     }
 
     private void throwPokeball() {
+        // == if we don't have enough pokeballs
+        if(pokeballsLeft == 0) {
+            writeText("No pokeballs left!");
+            lockScreen = false;
+            mStage = FightStages.EXIT;
+            return;
+        }
+
+        // == if we have enough
+        pokeballsLeft -= 1;
+
         // == creating pokeball object ==
         final ImageView pkbl = new ImageView(this);
         pkbl.setBackgroundResource(R.drawable.pokeball_center);
@@ -216,6 +252,7 @@ public class FightActivity extends AppCompatActivity {
                 mEnemyPicture.setVisibility(View.VISIBLE);
                 mPokeballAnim.setVisibility(View.INVISIBLE);
                 pokeballPoof(true);
+                writeText(pokeballsLeft + " pokeballs left. Throw pokeball?");
             }
         };
 
@@ -223,13 +260,26 @@ public class FightActivity extends AppCompatActivity {
         Log.i("INFO", Arrays.toString(doJiggle));
 
         // == setting up our animations ==
+        caught = true;
         for (int i = 0; i < doJiggle.length; i++) {
             if (doJiggle[i]) {
                 handler.postDelayed(jiggleRunnable, 1000 + i * duration);
             } else {
                 handler.postDelayed(outRunnable, 1000 + i * duration);
+                caught = false;
                 break; // we don't want to continue animation if the pokemon goes out
             }
+        }
+
+        if(caught) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mStage = FightStages.EXIT;
+                    writeText("Bulbasaur has been caught!");
+                    lockScreen = false;
+                }
+            },6000);
         }
     }
 

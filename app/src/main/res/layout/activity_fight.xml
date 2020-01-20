@@ -39,6 +39,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/fight_bar_opponent" />
 
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Bulbasaur"
+        android:textAllCaps="true"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/fightEnemyBarImage"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="16"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/fightEnemyBarImage"
+        app:layout_constraintStart_toStartOf="@+id/fightEnemyBarImage"
+        app:layout_constraintTop_toTopOf="@+id/fightEnemyBarImage" />
+
     <ImageView
         android:id="@+id/fightEnemyPicture"
         android:layout_width="wrap_content"

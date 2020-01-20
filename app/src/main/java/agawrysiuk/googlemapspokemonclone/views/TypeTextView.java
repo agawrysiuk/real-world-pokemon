@@ -89,6 +89,12 @@ public class TypeTextView extends TextView {
         return this;
     }
 
+    // == removing the listener ==
+    public TypeTextView removeOnTypeTextViewFinishedListener() {
+        this.listener = null;
+        return this;
+    }
+
     // == listener ==
     public interface OnTypeTextViewFinished {
         void onTyperFinished();
