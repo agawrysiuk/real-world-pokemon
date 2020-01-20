@@ -23,20 +23,10 @@
         android:id="@+id/fightPlayerBackImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/fightSpeechImage"
         app:layout_constraintEnd_toStartOf="parent"
         app:srcCompat="@drawable/fight_player_back" />
-
-    <ImageView
-        android:id="@+id/fightPokeballsImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/fightSpeechImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/fight_pokeballs" />
 
     <ImageView
         android:id="@+id/fightEnemyBarImage"
@@ -57,6 +47,16 @@
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fightEnemyBarImage"
         app:srcCompat="@drawable/pokemon_001" />
+
+    <ImageView
+        android:id="@+id/fightPokeballAnim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/fightEnemyPicture"
+        app:layout_constraintEnd_toEndOf="@+id/fightEnemyPicture"
+        app:layout_constraintStart_toStartOf="@+id/fightEnemyPicture"
+        app:layout_constraintTop_toTopOf="@+id/fightEnemyPicture" />
 
     <agawrysiuk.googlemapspokemonclone.views.TypeTextView
         android:id="@+id/fightTyper"
