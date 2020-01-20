@@ -9,20 +9,24 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Path;
-import android.graphics.PathMeasure;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.transition.AutoTransition;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import java.util.Arrays;
+import java.util.Random;
+
+import agawrysiuk.googlemapspokemonclone.support.MyWorkerThread;
+import agawrysiuk.googlemapspokemonclone.support.SynchronousHandler;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 
@@ -32,7 +36,7 @@ public class FightActivity extends AppCompatActivity {
         START_TEXT,
         HERO_POKEMON, OPPONENT_POKEMON, // for the future opening fight implementation
         ACTUAL_FIGHT, //for the future fight implementation
-        POKEBALL, //only for pokemons
+        POKEBALL_THROW, //only for pokemons
         END_TEXT; //when we win/catch pokemon
     }
 
@@ -40,6 +44,9 @@ public class FightActivity extends AppCompatActivity {
     private TypeTextView mFightTyper;
     private ImageView mPokeballAnim, mEnemyPicture, mPlayerPicture;
     private FightStages mStage = FightStages.START_TEXT;
+    private boolean lockScreen = false;
+    private int catchChance = 50;
+    private static final int CATCH_SIZE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +64,10 @@ public class FightActivity extends AppCompatActivity {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                int duration = 1000;
                 // == changing constraints (moving views on the layout) ==
                 Transition autoTransition = new AutoTransition();
-                autoTransition.setDuration(1000);
+                autoTransition.setDuration(duration);
                 TransitionManager.beginDelayedTransition(mFightLayout, autoTransition);
                 final ConstraintSet constraint = new ConstraintSet();
                 constraint.clone(FightActivity.this, R.layout.activity_fight_animation);
@@ -73,11 +81,11 @@ public class FightActivity extends AppCompatActivity {
                         .setOnTypeTextViewFinishedListener(new TypeTextView.OnTypeTextViewFinished() {
                             @Override
                             public void onTyperFinished() {
-                                mStage = FightStages.POKEBALL;
+                                mStage = FightStages.POKEBALL_THROW;
                             }
                         })
                         // == start animation after 2 seconds ==
-                        .animateTypeText(2000);
+                        .animateTypeText(duration + 1000);
                 // == when the typer ==
             }
         };
@@ -93,10 +101,13 @@ public class FightActivity extends AppCompatActivity {
     }
 
     public void onScreenTapped(View view) {
+        if (lockScreen) {
+            return;
+        }
         switch (mStage) {
             case START_TEXT:
                 return;
-            case POKEBALL:
+            case POKEBALL_THROW:
                 throwPokeball();
 //                jigglePokeball();
 //                writeText("Throw pokeball?");
@@ -133,13 +144,15 @@ public class FightActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mFightLayout.removeView(pkbl);
-                pokeballPoof();
+                pokeballPoof(false);
             }
         });
         a.start();
     }
 
-    private void pokeballPoof() {
+    //out is false -> we got here from throwing a ball
+    //out is true -> we got here because a pokemon got out from the ball (and we don't want jiggle animation)
+    private void pokeballPoof(final boolean out) {
         // == animating explosion ==
         final ImageView expl = new ImageView(this);
         expl.setX(mEnemyPicture.getX());
@@ -150,20 +163,78 @@ public class FightActivity extends AppCompatActivity {
         animation.setVisible(true, true);
         animation.start();
 
+        // == disappearing the layout after animation duration ==
+        int duration = getAnimDuration(animation);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mFightLayout.removeView(expl);
+                if (!out) {
+                    jigglePokeball();
+                }
             }
-        }, 400);
+        }, duration);
     }
 
     private void jigglePokeball() {
+        //== setting up visibility and animation ==
         mEnemyPicture.setVisibility(View.INVISIBLE);
         mPokeballAnim.setVisibility(View.VISIBLE);
-        AnimationDrawable animation = (AnimationDrawable) mPokeballAnim.getBackground();
-        animation.setVisible(true, true);
-        animation.start();
+        final AnimationDrawable animation = (AnimationDrawable) mPokeballAnim.getBackground();
+
+        // == utils ==
+        Random random = new Random();
+        boolean[] doJiggle = new boolean[3];
+
+        //setting up jiggle chance ==
+        for (int i = 0; i < 3; i++) {
+            if (random.nextInt(CATCH_SIZE) <= catchChance) {
+                doJiggle[i] = true;
+            }
+        }
+
+        // == checking animation duration ==
+        int duration = getAnimDuration(animation);
+
+        // == runnable if it stays (animation plays out) ==
+        Runnable jiggleRunnable = new Runnable() {
+            @Override
+            public void run() {
+                animation.setVisible(true, true);
+                animation.start();
+            }
+        };
+
+        // == runnable if it goes out ==
+        Runnable outRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mEnemyPicture.setVisibility(View.VISIBLE);
+                mPokeballAnim.setVisibility(View.INVISIBLE);
+                pokeballPoof(true);
+            }
+        };
+
+        Handler handler = new Handler();
+        Log.i("INFO", Arrays.toString(doJiggle));
+
+        // == setting up our animations ==
+        for (int i = 0; i < doJiggle.length; i++) {
+            if (doJiggle[i]) {
+                handler.postDelayed(jiggleRunnable, 1000 + i * duration);
+            } else {
+                handler.postDelayed(outRunnable, 1000 + i * duration);
+                break; // we don't want to continue animation if the pokemon goes out
+            }
+        }
+    }
+
+    private int getAnimDuration(AnimationDrawable animation) {
+        int duration = 0;
+        for (int i = 0; i < animation.getNumberOfFrames(); i++) {
+            duration += animation.getDuration(i);
+        }
+        return duration;
     }
 }
