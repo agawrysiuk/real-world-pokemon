@@ -44,7 +44,7 @@ public class FightActivity extends AppCompatActivity {
     private TypeTextView mFightTyper;
     private ImageView mPokeballAnim, mEnemyPicture, mPlayerPicture;
     private FightStages mStage = FightStages.START_TEXT;
-    private boolean lockScreen = false;
+    private boolean lockScreen = true;
     private int catchChance = 50;
     private static final int CATCH_SIZE = 100;
 
@@ -82,11 +82,11 @@ public class FightActivity extends AppCompatActivity {
                             @Override
                             public void onTyperFinished() {
                                 mStage = FightStages.POKEBALL_THROW;
+                                lockScreen = false;
                             }
                         })
                         // == start animation after 2 seconds ==
                         .animateTypeText(duration + 1000);
-                // == when the typer ==
             }
         };
         mFightLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -108,6 +108,7 @@ public class FightActivity extends AppCompatActivity {
             case START_TEXT:
                 return;
             case POKEBALL_THROW:
+                lockScreen = true;
                 throwPokeball();
 //                jigglePokeball();
 //                writeText("Throw pokeball?");
@@ -172,6 +173,8 @@ public class FightActivity extends AppCompatActivity {
                 mFightLayout.removeView(expl);
                 if (!out) {
                     jigglePokeball();
+                } else {
+                    lockScreen = false; //we go out and try to catch pokemon again
                 }
             }
         }, duration);
