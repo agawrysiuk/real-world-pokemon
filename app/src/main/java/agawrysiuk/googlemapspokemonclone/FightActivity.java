@@ -1,12 +1,11 @@
 package agawrysiuk.googlemapspokemonclone;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.animation.ValueAnimator;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.AutoTransition;
@@ -14,10 +13,10 @@ import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import agawrysiuk.googlemapspokemonclone.support.AnimationDrawableCallback;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 
@@ -33,7 +32,7 @@ public class FightActivity extends AppCompatActivity {
 
     private ConstraintLayout mFightLayout;
     private TypeTextView mFightTyper;
-    private ImageView mPokeballAnim,mEnemyPicture;
+    private ImageView mPokeballAnim,mEnemyPicture,mPlayerPicture;
     private FightStages mStage = FightStages.START_TEXT;
 
     @Override
@@ -46,6 +45,7 @@ public class FightActivity extends AppCompatActivity {
         mPokeballAnim = findViewById(R.id.fightPokeballAnim);
         mPokeballAnim.setBackgroundResource(R.drawable.animation_pokeball_jiggle);
         mEnemyPicture = findViewById(R.id.fightEnemyPicture);
+        mPlayerPicture = findViewById(R.id.fightPlayerBackImage);
 
         // == Start First Animation
         final Runnable runnable = new Runnable() {
@@ -91,7 +91,8 @@ public class FightActivity extends AppCompatActivity {
             case START_TEXT:
                 return;
             case POKEBALL:
-                jigglePokeball();
+                throwPokeball();
+//                jigglePokeball();
 //                writeText("Throw pokeball?");
             default:
                 return;
@@ -105,12 +106,32 @@ public class FightActivity extends AppCompatActivity {
         mFightTyper.setTextAttr(text).animateTypeText();
     }
 
+    private void throwPokeball() {
+        // == creating view object ==
+        ImageView pkbl = new ImageView(this);
+        pkbl.setBackgroundResource(R.drawable.pokeball_center);
+        // == adding it to the root layout ==
+        mFightLayout.addView(pkbl);
+        // == generating id (if it's not here, the view will carsh on getId() ==
+        pkbl.setId(View.generateViewId());
+
+        // == setting up constraints ==
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(mFightLayout);
+        constraintSet.connect(pkbl.getId(), ConstraintSet.START, mPlayerPicture.getId(), ConstraintSet.START, 0);
+        constraintSet.connect(pkbl.getId(), ConstraintSet.END, mPlayerPicture.getId(), ConstraintSet.END, 0);
+        constraintSet.connect(pkbl.getId(), ConstraintSet.TOP, mPlayerPicture.getId(), ConstraintSet.TOP, 0);
+        constraintSet.connect(pkbl.getId(), ConstraintSet.BOTTOM, mPlayerPicture.getId(), ConstraintSet.BOTTOM, 0);
+        constraintSet.constrainDefaultHeight(pkbl.getId(), ConstraintSet.WRAP_CONTENT);
+        constraintSet.constrainDefaultWidth(pkbl.getId(), ConstraintSet.WRAP_CONTENT);
+        constraintSet.applyTo(mFightLayout);
+
+    }
+
     private void jigglePokeball() {
         mEnemyPicture.setVisibility(View.INVISIBLE);
         mPokeballAnim.setVisibility(View.VISIBLE);
-        final AnimationDrawable animation = (AnimationDrawable) mPokeballAnim.getBackground();
-        Log.i("INFO",
-                animation.getNumberOfFrames()+"");
+        AnimationDrawable animation = (AnimationDrawable) mPokeballAnim.getBackground();
         animation.setVisible(true, true);
         animation.start();
     }
