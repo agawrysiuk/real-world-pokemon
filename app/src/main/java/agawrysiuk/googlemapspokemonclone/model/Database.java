@@ -5,17 +5,20 @@ import java.util.Map;
 
 public class Database {
     private static Database instance = new Database();
-    private Map<String, Map<String, Object>> pokemons;
+    private Map<String, Pokemon> pokemons = new HashMap<>();
 
     private Database() {
-        pokemons = new HashMap<>();
     }
 
     public static Database getInstance() {
         return instance;
     }
 
-    public Map<String, Map<String, Object>> getPokemons() {
+    public Map<String, Pokemon> getPokemons() {
         return pokemons;
+    }
+
+    public void downloadDatabase() {
+
     }
 }

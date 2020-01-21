@@ -38,6 +38,8 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.Random;
+
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
@@ -182,7 +184,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.clear();
         MarkerOptions marker = new MarkerOptions()
                 .position(pkmnLocation)
-                .title("009") //here we set up what pokemon this is
+                .title(String.format("%03d",new Random().nextInt(152))) //here we set up what pokemon this is
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pokemon_icon));
         mMap.addMarker(marker);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -194,6 +196,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .setVisible(true)
                         .setTextAttr("POKEMON: AAARGH!\n...\n...")
                         .animateTypeText();
+                marker.setTitle(String.format("%03d",new Random().nextInt(152)));
                 downloadPokemon(marker.getTitle());
 //                isReadyToFight = true;
                 // == return true for the event to consume the default behavior; false to make default behavior as well ==
@@ -250,6 +253,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void downloadPokemon(final String number) {
+        Log.i("NUMBER",number + "");
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Pokemon");
         parseQuery.whereEqualTo("number",number);
         parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {

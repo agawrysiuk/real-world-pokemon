@@ -17,8 +17,11 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    createEmptyCollection(mUsernameTxt.getText().toString());
                     transitionToMap();
                 } else {
                     mIncorrectTxt.setVisibility(View.VISIBLE);
@@ -162,5 +166,17 @@ public class MainActivity extends AppCompatActivity {
     private void transitionToMap() {
         startActivity(new Intent(MainActivity.this, MapsActivity.class));
         finish();
+    }
+
+    private void createEmptyCollection(String username) {
+        final ParseObject collectionParse = new ParseObject("Collection");
+        collectionParse.put("username",username);
+        collectionParse.put("collection",new ArrayList<String>());
+        try {
+            collectionParse.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 }
