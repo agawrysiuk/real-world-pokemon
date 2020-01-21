@@ -182,7 +182,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.clear();
         MarkerOptions marker = new MarkerOptions()
                 .position(pkmnLocation)
-                .title("000")
+                .title("009") //here we set up what pokemon this is
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pokemon_icon));
         mMap.addMarker(marker);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

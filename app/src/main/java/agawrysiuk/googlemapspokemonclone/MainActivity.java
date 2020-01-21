@@ -34,35 +34,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
 
-
-//        BufferedReader br = new BufferedReader(
-//                new InputStreamReader(
-//                        this.getClass().getClassLoader()
-//                                .getResourceAsStream("res/raw/pokemons.txt")));
-//        String line = "";
-//        try {
-//            while ((line = br.readLine()) != null) {
-//                if (line.startsWith("000")) {
-//                    String[] split = line.split(" ");
-//                    final ParseObject obiekt = new ParseObject("Pokemon");
-//                    obiekt.put("number",split[0]);
-//                    obiekt.put("name",split[1]);
-//                    obiekt.put("drawable",Integer.parseInt(split[2]));
-//                    obiekt.saveInBackground(new SaveCallback() {
-//                        @Override
-//                        public void done (ParseException e) {
-//                            if (e == null) {
-//                                Log.i("ERROR", "Added");
-//                            } else {
-//                                Log.i("ERROR", "Not Added");
-//                                e.printStackTrace();
-//                            }}});
-//                }
-//
-//            }
-//        } catch (IOException io) {
-//            Log.i("ERROR", "Exception");
-//        }
 //        ParseUser.logOut();
 
         // == sending information about installation ==
@@ -104,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isLoggingIn) {
+                if (isLoggingIn) {
                     // == existing user ==
                     wantsToLogin();
                 } else {
@@ -128,18 +99,18 @@ public class MainActivity extends AppCompatActivity {
 
                 // == creating two different layouts to apply ==
                 ConstraintSet constraintGoingToSignup = new ConstraintSet();
-                constraintGoingToSignup.clone(MainActivity.this,R.layout.activity_main_signup);
+                constraintGoingToSignup.clone(MainActivity.this, R.layout.activity_main_signup);
                 ConstraintSet constraintGoingToLogin = new ConstraintSet();
-                constraintGoingToLogin.clone(MainActivity.this,R.layout.activity_main_login);
+                constraintGoingToLogin.clone(MainActivity.this, R.layout.activity_main_login);
 
                 // == setting the layout to the root ==
-                ConstraintSet constraint = isLoggingIn? constraintGoingToSignup : constraintGoingToLogin;
+                ConstraintSet constraint = isLoggingIn ? constraintGoingToSignup : constraintGoingToLogin;
                 constraint.applyTo(mConstraintLayout);
 
                 // == changing texts ==
                 mLoginBtn.setText(isLoggingIn ? R.string.welcome_signup_button : R.string.welcome_login_button);
-                mNewUserTxt.setText(isLoggingIn? R.string.welcome_existing_user_text : R.string.welcome_new_user_text);
-                mIncorrectTxt.setText(isLoggingIn? R.string.welcome_incorrect_signup_text : R.string.welcome_incorrect_login_text);
+                mNewUserTxt.setText(isLoggingIn ? R.string.welcome_existing_user_text : R.string.welcome_new_user_text);
+                mIncorrectTxt.setText(isLoggingIn ? R.string.welcome_incorrect_signup_text : R.string.welcome_incorrect_login_text);
 
                 isLoggingIn = !isLoggingIn;
             }
@@ -166,12 +137,14 @@ public class MainActivity extends AppCompatActivity {
         user.setEmail(mEmailTxt.getText().toString());
         user.signUpInBackground(new SignUpCallback() {
             @Override
-            public void done (ParseException e) {
+            public void done(ParseException e) {
                 if (e == null) {
                     transitionToMap();
                 } else {
                     mIncorrectTxt.setVisibility(View.VISIBLE);
-                }}});
+                }
+            }
+        });
 
     }
 
@@ -186,8 +159,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-        private void transitionToMap() {
-        startActivity(new Intent(MainActivity.this,MapsActivity.class));
+    private void transitionToMap() {
+        startActivity(new Intent(MainActivity.this, MapsActivity.class));
         finish();
     }
 }
