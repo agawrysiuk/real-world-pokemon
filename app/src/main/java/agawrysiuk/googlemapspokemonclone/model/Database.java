@@ -1,5 +1,6 @@
 package agawrysiuk.googlemapspokemonclone.model;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.parse.ParseException;
@@ -29,7 +30,7 @@ public class Database {
         return pokemons;
     }
 
-    public void downloadDatabase() {
+    public void downloadDatabase(Resources resources) {
         // == default pokemon if no connection ==
         pokemons.put("000", new Pokemon("000", "MISSINGNO.", 2131099793));
 
@@ -42,7 +43,7 @@ public class Database {
                 String number = object.getString("number");
                 String name = object.getString("name");
                 int drawable = object.getInt("drawable");
-                pokemons.put(number, new Pokemon(number, name, drawable));
+                pokemons.put(number, new Pokemon(number, name, resources.getIdentifier("pokemon_"+number, "drawable", "agawrysiuk.googlemapspokemonclone")));
             }
             Log.i("INFO", "Download of pokemon data completed");
         } catch (ParseException e) {
@@ -66,7 +67,7 @@ public class Database {
             Log.i("ERROR", "Download stopped.");
             e.printStackTrace();
         }
-        Log.i("INFO", collection.toString());
+        Log.i("INFO", "Your collection is: "+collection.toString());
     }
 
     public void addPokemonToYourCollection(Pokemon pokemon) {

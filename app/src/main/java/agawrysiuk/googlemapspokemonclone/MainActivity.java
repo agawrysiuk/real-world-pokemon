@@ -3,6 +3,7 @@ package agawrysiuk.googlemapspokemonclone;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -38,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
 //        ParseUser.logOut();
 
-        Database.getInstance().downloadDatabase();
+        Database.getInstance().downloadDatabase(getResources());
         Database.getInstance().downloadYourCollection();
+        Log.i("INFO", getResources().getResourceEntryName(R.drawable.pokemon_000));
 
         // == sending information about installation ==
         ParseInstallation.getCurrentInstallation().saveInBackground();

@@ -66,7 +66,9 @@ public class FightActivity extends AppCompatActivity {
         mFightTyper = findViewById(R.id.fightTyper);
         mPokeballAnim = findViewById(R.id.fightPokeballAnim);
         mPokeballAnim.setBackgroundResource(R.drawable.animation_pokeball_jiggle);
+
         mEnemyPicture = findViewById(R.id.fightEnemyPicture);
+
         mEnemyPicture.setBackgroundResource(mPokemon.getDrawable());
         mPlayerPicture = findViewById(R.id.fightPlayerBackImage);
         mTextName = findViewById(R.id.txtName); //later to implement name here
