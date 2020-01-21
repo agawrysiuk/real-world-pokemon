@@ -37,7 +37,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Random;
 
 import agawrysiuk.googlemapspokemonclone.model.Database;
-import agawrysiuk.googlemapspokemonclone.model.MapManager;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
@@ -47,8 +46,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //NETWORK_PROVIDER for real device
     //GPS_PROVIDER for emulator
     private static final String PROVIDER_FOR_GPS = LocationManager.GPS_PROVIDER;
-
-    private MapManager mMapManager;
 
     private GoogleMap mMap;
     private LocationManager mLocationManager;
@@ -64,15 +61,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // == for the new activity to start ==
     private boolean isReadyToFight = false;
 
+    // == for the pokemon that we encounter ==
     private Pokemon mPokemon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        //create a map manager for help purposes
-        mMapManager = new MapManager(this);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+        // == Obtain the SupportMapFragment and get notified when the map is ready to be used. ==
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

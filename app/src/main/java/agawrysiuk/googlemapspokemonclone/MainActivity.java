@@ -17,14 +17,10 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-import java.util.ArrayList;
-
 import agawrysiuk.googlemapspokemonclone.model.Database;
-import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_login);
 
 //        ParseUser.logOut();
-//        createEmptyCollection(ParseUser.getCurrentUser().getUsername());
 
         Database.getInstance().downloadDatabase();
         Database.getInstance().downloadYourCollection();
@@ -149,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    createEmptyCollection(mUsernameTxt.getText().toString());
                     transitionToMap();
                 } else {
                     mIncorrectTxt.setVisibility(View.VISIBLE);
@@ -173,17 +167,5 @@ public class MainActivity extends AppCompatActivity {
     private void transitionToMap() {
         startActivity(new Intent(MainActivity.this, MapsActivity.class));
         finish();
-    }
-
-    private void createEmptyCollection(String username) {
-        final ParseObject collectionParse = new ParseObject("Collection");
-        collectionParse.put("username",username);
-        collectionParse.put("collection",new ArrayList<Pokemon>());
-        try {
-            collectionParse.save();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
     }
 }

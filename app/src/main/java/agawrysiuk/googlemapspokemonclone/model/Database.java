@@ -6,9 +6,9 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,18 +55,38 @@ public class Database {
         try {
             ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Collection");
             parseQuery.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
-            ParseObject object = parseQuery.getFirst();
-            List<Pokemon> list = object.getList("collection");
-            Log.i("INFO", "Download of user list completed");
-            Log.i("INFO", "List = "+list.toString());
-            Collections.copy(list,collection);
+            List<ParseObject> objects = parseQuery.find();
+            if (objects.size() > 0) {
+                for (ParseObject object : objects) {
+                    String pokemonId = object.getString("pokemonId");
+                    collection.add(pokemons.get(pokemonId));
+                }
+            }
         } catch (ParseException e) {
             Log.i("ERROR", "Download stopped.");
             e.printStackTrace();
         }
+        Log.i("INFO", collection.toString());
     }
 
     public void addPokemonToYourCollection(Pokemon pokemon) {
-        collection.add(pokemon);
+        if (!collection.contains(pokemon)) {
+            collection.add(pokemon);
+            final ParseObject object = new ParseObject("Collection");
+            object.put("username", ParseUser.getCurrentUser().getUsername());
+            object.put("pokemonId",pokemon.getNumber());
+            object.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Log.i("INFO", "Pokemon saved.");
+                    } else {
+                        Log.i("ERROR", "Can't save the pokemon.");
+                    }
+                }
+            });
+        } else {
+            Log.i("INFO", "Pokemon already in collection.");
+        }
     }
 }
