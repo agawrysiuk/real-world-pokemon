@@ -1,9 +1,5 @@
 package agawrysiuk.googlemapspokemonclone;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -12,8 +8,6 @@ import android.graphics.Path;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.transition.AutoTransition;
 import android.transition.Transition;
 import android.transition.TransitionManager;
@@ -23,11 +17,13 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import java.util.Arrays;
 import java.util.Random;
 
-import agawrysiuk.googlemapspokemonclone.support.MyWorkerThread;
-import agawrysiuk.googlemapspokemonclone.support.SynchronousHandler;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 
@@ -38,7 +34,6 @@ public class FightActivity extends AppCompatActivity {
         HERO_POKEMON, OPPONENT_POKEMON, // for the future opening fight implementation
         ACTUAL_FIGHT, //for the future fight implementation
         POKEBALL_INFO, POKEBALL_THROW, //only for pokemons
-        END_TEXT, //when we win/catch pokemon
         EXIT;
     }
 
@@ -52,11 +47,15 @@ public class FightActivity extends AppCompatActivity {
     private int catchChance = 50;
     boolean caught = false;
     private static final int CATCH_SIZE = 100;
+    
+    private String pokemonName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fight);
+
+        pokemonName = "Bulbasaur";
 
         mFightLayout = findViewById(R.id.fightLayout);
         mFightTyper = findViewById(R.id.fightTyper);
@@ -82,7 +81,7 @@ public class FightActivity extends AppCompatActivity {
                 // == typing text ==
                 mFightTyper
                         // == typer text ==
-                        .setTextAttr("Wild Bulbasaur appeared!")
+                        .setTextAttr("Wild " + pokemonName + " appeared!")
                         // == what to do after typer finishes ==
                         .setOnTypeTextViewFinishedListener(new TypeTextView.OnTypeTextViewFinished() {
                             @Override
@@ -101,13 +100,14 @@ public class FightActivity extends AppCompatActivity {
             public void onGlobalLayout() {
                 mFightLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 // == start animation ==
-                new Handler().postDelayed(runnable, 10);
+                new Handler().postDelayed(runnable, 1000);
             }
         });
 
     }
 
     public void onScreenTapped(View view) {
+        // == it's a root layout that will navigate between the stages ==
         if (lockScreen) {
             return;
         }
@@ -121,8 +121,6 @@ public class FightActivity extends AppCompatActivity {
             case POKEBALL_THROW:
                 lockScreen = true;
                 throwPokeball();
-//                jigglePokeball();
-//                writeText("Throw pokeball?");
                 break;
             case EXIT:
                 lockScreen = true;
@@ -135,13 +133,12 @@ public class FightActivity extends AppCompatActivity {
                 if (!caught) {
                     writeText("Got away safely!");
                 } else {
-                    writeText("");
+                    writeText(pokemonName + " added to your pokemon collection.");
                 }
+                break;
             default:
                 return;
         }
-        // == it's a root layout that will navigate between the stages
-//        writeText("Test id " + ++testId);
     }
 
     private void writeText(String text) {
@@ -276,10 +273,10 @@ public class FightActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     mStage = FightStages.EXIT;
-                    writeText("Bulbasaur has been caught!");
+                    writeText(pokemonName + " has been caught!");
                     lockScreen = false;
                 }
-            },6000);
+            },8000);
         }
     }
 
@@ -289,5 +286,11 @@ public class FightActivity extends AppCompatActivity {
             duration += animation.getDuration(i);
         }
         return duration;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 }

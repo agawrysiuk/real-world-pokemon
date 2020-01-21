@@ -1,10 +1,5 @@
 package agawrysiuk.googlemapspokemonclone;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -22,6 +17,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -90,7 +90,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 mTypeTextView.setVisibility(View.INVISIBLE);
                 mBubbleSpeechView.setVisibility(View.INVISIBLE);
+
                 startActivity(new Intent(MapsActivity.this,FightActivity.class));
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 isReadyToFight = false;
             }
         };
