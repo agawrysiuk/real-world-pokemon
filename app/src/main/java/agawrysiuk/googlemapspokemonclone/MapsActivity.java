@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -33,6 +34,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.parse.ParseUser;
 
 import java.util.Random;
 
@@ -85,6 +95,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Sensor rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         sensorManager.registerListener(this, rotationSensor,
                 SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+
+        // == creating header for side bar ==
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.player_front)
+                .withHeaderBackgroundScaleType(ImageView.ScaleType.CENTER)
+                .build();
+
+        // == creating items for side bar ==
+        final Drawer result = new DrawerBuilder()
+                .withActivity(this)
+                .withAccountHeader(headerResult)
+                .withDrawerWidthDp(160)
+                .withDrawerGravity(Gravity.END)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(ParseUser.getCurrentUser().getUsername()).withSelectable(false),
+                        new DividerDrawerItem(),
+                        new SecondaryDrawerItem().withName("Profile").withSelectable(false),
+                        new DividerDrawerItem(),
+                        new SecondaryDrawerItem().withName("Pokemons").withSelectable(false),
+                        new DividerDrawerItem(),
+                        new SecondaryDrawerItem().withName("Options").withSelectable(false),
+                        new DividerDrawerItem()
+                )
+                .withSelectedItem(-1)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+                        return true;
+                    }
+                })
+                .withHeaderPadding(true)
+                .withCloseOnClick(true)
+                .build();
+
+        // == opening drawer when we click on the player's back ==
+        findViewById(R.id.playerBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isReadyToFight) {
+                    result.openDrawer();
+                }
+            }
+        });
     }
 
     private View.OnClickListener hideBubbleStartFight() {
