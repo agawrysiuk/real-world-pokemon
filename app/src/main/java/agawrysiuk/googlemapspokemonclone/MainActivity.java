@@ -1,11 +1,5 @@
 package agawrysiuk.googlemapspokemonclone;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.view.ViewCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
@@ -15,6 +9,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -35,6 +33,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
+
+
+//        BufferedReader br = new BufferedReader(
+//                new InputStreamReader(
+//                        this.getClass().getClassLoader()
+//                                .getResourceAsStream("res/raw/pokemons.txt")));
+//        String line = "";
+//        try {
+//            while ((line = br.readLine()) != null) {
+//                if (line.startsWith("000")) {
+//                    String[] split = line.split(" ");
+//                    final ParseObject obiekt = new ParseObject("Pokemon");
+//                    obiekt.put("number",split[0]);
+//                    obiekt.put("name",split[1]);
+//                    obiekt.put("drawable",Integer.parseInt(split[2]));
+//                    obiekt.saveInBackground(new SaveCallback() {
+//                        @Override
+//                        public void done (ParseException e) {
+//                            if (e == null) {
+//                                Log.i("ERROR", "Added");
+//                            } else {
+//                                Log.i("ERROR", "Not Added");
+//                                e.printStackTrace();
+//                            }}});
+//                }
+//
+//            }
+//        } catch (IOException io) {
+//            Log.i("ERROR", "Exception");
+//        }
 //        ParseUser.logOut();
 
         // == sending information about installation ==

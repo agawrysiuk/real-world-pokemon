@@ -68,8 +68,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fightEnemyBarImage"
-        app:layout_constraintTop_toBottomOf="@+id/fightEnemyBarImage"
-        app:srcCompat="@drawable/pokemon_001" />
+        app:layout_constraintTop_toBottomOf="@+id/fightEnemyBarImage"/>
 
     <ImageView
         android:id="@+id/fightPokeballAnim"

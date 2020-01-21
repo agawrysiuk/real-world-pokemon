@@ -55,15 +55,17 @@ public class FightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fight);
 
-        pokemonName = "Bulbasaur";
+        pokemonName = getIntent().getStringExtra("name");
 
         mFightLayout = findViewById(R.id.fightLayout);
         mFightTyper = findViewById(R.id.fightTyper);
         mPokeballAnim = findViewById(R.id.fightPokeballAnim);
         mPokeballAnim.setBackgroundResource(R.drawable.animation_pokeball_jiggle);
         mEnemyPicture = findViewById(R.id.fightEnemyPicture);
+        mEnemyPicture.setBackgroundResource(getIntent().getIntExtra("drawable",2131099793));
         mPlayerPicture = findViewById(R.id.fightPlayerBackImage);
         mTextName = findViewById(R.id.txtName); //later to implement name here
+        mTextName.setText(pokemonName);
 
         // == Start First Animation
         final Runnable runnable = new Runnable() {
@@ -133,7 +135,7 @@ public class FightActivity extends AppCompatActivity {
                 if (!caught) {
                     writeText("Got away safely!");
                 } else {
-                    writeText(pokemonName + " added to your pokemon collection.");
+                    writeText(pokemonName + " added to your collection.");
                 }
                 break;
             default:

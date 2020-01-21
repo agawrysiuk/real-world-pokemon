@@ -33,8 +33,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
+import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, SensorEventListener {
@@ -59,6 +64,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // == for the new activity to start ==
     private boolean isReadyToFight = false;
+
+    private Pokemon mPokemon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +95,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!isReadyToFight || mPokemon==null) {
+                    return;
+                }
                 mTypeTextView.setVisibility(View.INVISIBLE);
                 mBubbleSpeechView.setVisibility(View.INVISIBLE);
 
-                startActivity(new Intent(MapsActivity.this,FightActivity.class));
+                Intent intent = new Intent(MapsActivity.this,FightActivity.class);
+                intent.putExtra("name", mPokemon.getName());
+                intent.putExtra("drawable", mPokemon.getDrawable());
+                startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 isReadyToFight = false;
             }
@@ -169,7 +182,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.clear();
         MarkerOptions marker = new MarkerOptions()
                 .position(pkmnLocation)
-                .title("Pokemon")
+                .title("000")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pokemon_icon));
         mMap.addMarker(marker);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -181,7 +194,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .setVisible(true)
                         .setTextAttr("POKEMON: AAARGH!\n...\n...")
                         .animateTypeText();
-                isReadyToFight = true;
+                downloadPokemon(marker.getTitle());
+//                isReadyToFight = true;
                 // == return true for the event to consume the default behavior; false to make default behavior as well ==
                 return true;
             }
@@ -233,7 +247,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         // == removed Marker adding because the player is displayed on the view now ==
+    }
 
+    private void downloadPokemon(final String number) {
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Pokemon");
+        parseQuery.whereEqualTo("number",number);
+        parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                mPokemon = new Pokemon(number,object.getString("name"),object.getInt("drawable"));
+                isReadyToFight = true;
+            }
+        });
 
     }
 }
