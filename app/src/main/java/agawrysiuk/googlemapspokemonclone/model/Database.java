@@ -51,7 +51,7 @@ public class Database {
         }
     }
 
-    public void downloadCollection() {
+    public void downloadYourCollection() {
         try {
             ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Collection");
             parseQuery.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
@@ -64,5 +64,9 @@ public class Database {
             Log.i("ERROR", "Download stopped.");
             e.printStackTrace();
         }
+    }
+
+    public void addPokemonToYourCollection(Pokemon pokemon) {
+        collection.add(pokemon);
     }
 }

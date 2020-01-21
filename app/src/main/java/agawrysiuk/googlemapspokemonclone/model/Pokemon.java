@@ -1,6 +1,8 @@
 package agawrysiuk.googlemapspokemonclone.model;
 
-public final class Pokemon {
+import java.io.Serializable;
+
+public final class Pokemon implements Serializable {
 
     private String number;
     private String name;

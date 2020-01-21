@@ -101,8 +101,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mBubbleSpeechView.setVisibility(View.INVISIBLE);
 
                 Intent intent = new Intent(MapsActivity.this,FightActivity.class);
-                intent.putExtra("name", mPokemon.getName());
-                intent.putExtra("drawable", mPokemon.getDrawable());
+                intent.putExtra("pokemon", mPokemon);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                 isReadyToFight = false;

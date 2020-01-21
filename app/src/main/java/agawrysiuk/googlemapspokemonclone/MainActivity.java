@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 //        ParseUser.logOut();
 //        createEmptyCollection(ParseUser.getCurrentUser().getUsername());
 
-//        Database.getInstance().downloadDatabase();
-        Database.getInstance().downloadCollection();
+        Database.getInstance().downloadDatabase();
+        Database.getInstance().downloadYourCollection();
 
         // == sending information about installation ==
         ParseInstallation.getCurrentInstallation().saveInBackground();

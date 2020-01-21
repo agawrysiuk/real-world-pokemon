@@ -24,6 +24,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.Arrays;
 import java.util.Random;
 
+import agawrysiuk.googlemapspokemonclone.model.Database;
+import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 
@@ -47,6 +49,8 @@ public class FightActivity extends AppCompatActivity {
     private int catchChance = 50;
     boolean caught = false;
     private static final int CATCH_SIZE = 100;
+
+    private Pokemon mPokemon;
     
     private String pokemonName;
 
@@ -55,14 +59,15 @@ public class FightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fight);
 
-        pokemonName = getIntent().getStringExtra("name");
+        mPokemon = (Pokemon) getIntent().getSerializableExtra("pokemon");
+        pokemonName = mPokemon.getName();
 
         mFightLayout = findViewById(R.id.fightLayout);
         mFightTyper = findViewById(R.id.fightTyper);
         mPokeballAnim = findViewById(R.id.fightPokeballAnim);
         mPokeballAnim.setBackgroundResource(R.drawable.animation_pokeball_jiggle);
         mEnemyPicture = findViewById(R.id.fightEnemyPicture);
-        mEnemyPicture.setBackgroundResource(getIntent().getIntExtra("drawable",2131099793));
+        mEnemyPicture.setBackgroundResource(mPokemon.getDrawable());
         mPlayerPicture = findViewById(R.id.fightPlayerBackImage);
         mTextName = findViewById(R.id.txtName); //later to implement name here
         mTextName.setText(pokemonName);
@@ -135,6 +140,7 @@ public class FightActivity extends AppCompatActivity {
                 if (!caught) {
                     writeText("Got away safely!");
                 } else {
+                    Database.getInstance().addPokemonToYourCollection(mPokemon);
                     writeText(pokemonName + " added to your collection.");
                 }
                 break;
