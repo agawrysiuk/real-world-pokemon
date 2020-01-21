@@ -23,6 +23,9 @@ import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
 
+import agawrysiuk.googlemapspokemonclone.model.Database;
+import agawrysiuk.googlemapspokemonclone.model.Pokemon;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView mWelcometxt, mIncorrectTxt, mNewUserTxt;
@@ -38,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_login);
 
 //        ParseUser.logOut();
+//        createEmptyCollection(ParseUser.getCurrentUser().getUsername());
+
+//        Database.getInstance().downloadDatabase();
+        Database.getInstance().downloadCollection();
 
         // == sending information about installation ==
         ParseInstallation.getCurrentInstallation().saveInBackground();
@@ -171,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
     private void createEmptyCollection(String username) {
         final ParseObject collectionParse = new ParseObject("Collection");
         collectionParse.put("username",username);
-        collectionParse.put("collection",new ArrayList<String>());
+        collectionParse.put("collection",new ArrayList<Pokemon>());
         try {
             collectionParse.save();
         } catch (ParseException e) {

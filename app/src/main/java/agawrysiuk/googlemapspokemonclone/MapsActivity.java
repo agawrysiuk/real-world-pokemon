@@ -33,13 +33,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import java.util.Random;
 
+import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.MapManager;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
@@ -197,7 +194,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .setTextAttr("POKEMON: AAARGH!\n...\n...")
                         .animateTypeText();
                 marker.setTitle(String.format("%03d",new Random().nextInt(152)));
-                downloadPokemon(marker.getTitle());
+                getPokemon(marker.getTitle());
 //                isReadyToFight = true;
                 // == return true for the event to consume the default behavior; false to make default behavior as well ==
                 return true;
@@ -252,17 +249,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // == removed Marker adding because the player is displayed on the view now ==
     }
 
-    private void downloadPokemon(final String number) {
+    private void getPokemon(final String number) {
         Log.i("NUMBER",number + "");
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Pokemon");
-        parseQuery.whereEqualTo("number",number);
-        parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                mPokemon = new Pokemon(number,object.getString("name"),object.getInt("drawable"));
-                isReadyToFight = true;
-            }
-        });
-
+        mPokemon = Database.getInstance().getPokemons().get(number);
+        if (mPokemon == null) {
+            mPokemon = Database.getInstance().getPokemons().get("000");
+        }
+        isReadyToFight = true;
     }
 }
