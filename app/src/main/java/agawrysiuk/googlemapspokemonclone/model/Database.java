@@ -10,6 +10,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,7 @@ public class Database {
             Log.i("ERROR", "Download stopped.");
             e.printStackTrace();
         }
+        Collections.sort(collection);
         Log.i("INFO", "Your collection is: "+collection.toString());
     }
 
@@ -86,8 +88,13 @@ public class Database {
                     }
                 }
             });
+            Collections.sort(collection);
         } else {
             Log.i("INFO", "Pokemon already in collection.");
         }
+    }
+
+    public List<Pokemon> getCollection() {
+        return collection;
     }
 }

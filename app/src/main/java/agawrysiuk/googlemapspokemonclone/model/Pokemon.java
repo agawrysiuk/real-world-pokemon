@@ -30,7 +30,7 @@ public final class Pokemon implements Serializable,Comparable<Pokemon> {
 
     @Override
     public int compareTo(Pokemon o) {
-        return o.getName().compareTo(this.name);
+        return this.number.compareTo(o.getNumber());
     }
 
     @NonNull

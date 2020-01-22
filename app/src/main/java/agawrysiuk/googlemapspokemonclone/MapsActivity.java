@@ -114,7 +114,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withName("Profile").withSelectable(false),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withName("Pokemons").withSelectable(false),
+                        new SecondaryDrawerItem().withName("Pokemons").withSelectable(false).withIdentifier(2),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withName("Options").withSelectable(false),
                         new DividerDrawerItem()
@@ -123,7 +123,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
+                        if(drawerItem.getIdentifier() == 2) {
+                            startActivity(new Intent(MapsActivity.this,CollectionActivity.class));
+                        }
                         return true;
                     }
                 })
