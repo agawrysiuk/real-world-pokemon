@@ -116,7 +116,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withName("Pokemons").withSelectable(false).withIdentifier(2),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withName("Options").withSelectable(false),
+                        new SecondaryDrawerItem().withName("Options").withSelectable(false).withIdentifier(3),
                         new DividerDrawerItem()
                 )
                 .withSelectedItem(-1)
@@ -128,6 +128,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         } else if(drawerItem.getIdentifier() == 2) {
                             startActivity(new Intent(MapsActivity.this,CollectionActivity.class));
+                            overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                        } else if(drawerItem.getIdentifier() == 3) {
+                            startActivity(new Intent(MapsActivity.this, OptionsActivity.class));
                             overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         }
                         return true;

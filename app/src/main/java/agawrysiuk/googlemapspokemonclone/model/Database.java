@@ -72,6 +72,16 @@ public class Database {
         Log.i("INFO", "Your collection is: "+collection.toString());
     }
 
+    public void downloadYourSettings() {
+        // 1. calling database
+        // 2. setting up global settings:
+        //     - themes (setTheme before setContentView), findViewById(R.id.mainLayout).invalidate() for autorestart
+        //     - sound on/off
+        //     - sound volume
+        //     - change player front?
+        //     - change password in options activity
+    }
+
     public void addPokemonToYourCollection(Pokemon pokemon) {
         if (!collection.contains(pokemon)) {
             collection.add(pokemon);
