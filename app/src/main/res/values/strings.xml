@@ -17,4 +17,5 @@
     <string name="welcome_signup_button">Sign up</string>
     <string name="title_activity_maps">Map</string>
     <string name="pokemon_level">16</string>
+    <string name="pokemon_seen">Pokemon caught:</string>
 </resources>
