@@ -11,53 +11,152 @@
     android:paddingEnd="12dp"
     tools:context=".OptionsActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.75"
+        app:srcCompat="@color/common_google_signin_btn_text_light_pressed" />
+
     <LinearLayout
         android:id="@+id/layoutDarkTheme"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtEnableDarkTheme"
+            android:id="@+id/txtDarkTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_margin="4dp"
-            android:text="Enable dark theme?"
+            android:gravity="center"
+            android:text="@string/options_dark_theme"
             android:textStyle="bold" />
 
         <com.suke.widget.SwitchButton
-            android:id="@+id/switch_button"
+            android:id="@+id/switchDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_margin="4dp"
+            android:gravity="center"
             app:sb_checked_color="@color/md_black_1000"
             app:sb_enable_effect="true"
-            app:sb_show_indicator="false"/>
+            app:sb_show_indicator="false" />
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.75"
+        app:srcCompat="@color/common_google_signin_btn_text_light_pressed" />
 
     <LinearLayout
         android:id="@+id/layoutSound"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtSound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:text="@string/options_sound"
+            android:textStyle="bold" />
+
+        <com.suke.widget.SwitchButton
+            android:id="@+id/switchSound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            app:sb_checked="true"
+            app:sb_checked_color="@color/md_black_1000"
+            app:sb_enable_effect="true"
+            app:sb_show_indicator="false" />
+
+        <TextView
+            android:id="@+id/txtVolume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:text="@string/options_volume"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/seekBarVol"
+            style="@android:style/Widget.DeviceDefault.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="60"
+            android:progressTint="@color/colorPrimary"
+            android:thumbTint="@color/colorPrimaryLight" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.75"
+        app:srcCompat="@color/common_google_signin_btn_text_light_pressed" />
 
     <LinearLayout
         android:id="@+id/layoutPlayerFront"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_weight="3"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgPlayerFront"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/player_front" />
+
+        <Button
+            android:id="@+id/btnChangePlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Change image" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.75"
+        app:srcCompat="@color/common_google_signin_btn_text_light_pressed" />
 
     <LinearLayout
         android:id="@+id/layoutChangePassword"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"></LinearLayout>
+        android:gravity="bottom|center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnChangePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Change password" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Logout" />
+    </LinearLayout>
 </LinearLayout>

@@ -18,4 +18,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="pokemon_level">16</string>
     <string name="pokemon_seen">Pokemon caught:</string>
+    <string name="options_dark_theme">Enable dark theme?</string>
+    <string name="options_sound">Enable sound?</string>
+    <string name="options_volume">Volume:</string>
 </resources>
