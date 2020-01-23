@@ -21,4 +21,7 @@
     <string name="options_dark_theme">Enable dark theme?</string>
     <string name="options_sound">Enable sound?</string>
     <string name="options_volume">Volume:</string>
+    <string name="options_change_avatar">Change avatar</string>
+    <string name="options_change_password">Change password</string>
+    <string name="options_logout">Logout</string>
 </resources>

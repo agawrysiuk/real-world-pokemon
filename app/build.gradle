@@ -38,6 +38,9 @@ dependencies {
     //switchbutton
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
 
+    //pretty dialog
+    implementation 'com.github.mjn1369:prettydialog:1.0.4'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

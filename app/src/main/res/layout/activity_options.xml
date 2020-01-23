@@ -129,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Change image" />
+            android:text="@string/options_change_avatar" />
     </LinearLayout>
 
     <ImageView
@@ -151,13 +151,13 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Change password" />
+            android:text="@string/options_change_password" />
 
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Logout" />
+            android:text="@string/options_logout" />
     </LinearLayout>
 </LinearLayout>
