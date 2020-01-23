@@ -19,6 +19,7 @@ public class Database {
     private static Database instance = new Database();
     private Map<String, Pokemon> pokemons = new HashMap<>();
     private List<Pokemon> collection = new ArrayList<>();
+    private String settingsId;
 
     private Database() {
     }
@@ -73,6 +74,23 @@ public class Database {
     }
 
     public void downloadYourSettings() {
+        try {
+            ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Settings");
+            parseQuery.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
+            ParseObject object = parseQuery.getFirst();
+
+            Settings settings = Settings.getInstance();
+            Log.i("STYLE", "Dark theme? = " + object.getBoolean("darktheme"));
+            settings.setDarkTheme(object.getBoolean("darktheme"));
+            settings.setSound(object.getBoolean("sound"));
+            settingsId = object.getObjectId();
+
+        } catch (ParseException e) {
+            Log.i("ERROR", "Settings download stopped.");
+            e.printStackTrace();
+        }
+
+
         // 1. calling database
         // 2. setting up global settings:
         //     - themes (setTheme before setContentView), findViewById(R.id.mainLayout).invalidate() for autorestart
@@ -106,5 +124,23 @@ public class Database {
 
     public List<Pokemon> getCollection() {
         return collection;
+    }
+
+    public void saveSettings() {
+        final ParseObject object = new ParseObject("Settings");
+        object.setObjectId(settingsId);
+        object.put("darktheme",Settings.getInstance().isDarkTheme());
+        object.put("sound",Settings.getInstance().isSoundOn());
+        object.put("avatar",Settings.getInstance().getAvatar());
+        object.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.i("INFO", "Settings saved.");
+                } else {
+                    Log.i("ERROR", "Can't save settings.");
+                }
+            }
+        });
     }
 }

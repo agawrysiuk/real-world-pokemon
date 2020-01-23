@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -48,7 +49,10 @@ import java.util.Random;
 
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
+import agawrysiuk.googlemapspokemonclone.model.Settings;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
+
+import static agawrysiuk.googlemapspokemonclone.utils.UtilRequestCode.REQUEST_CODE_REFRESH_VIEW;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, SensorEventListener {
 
@@ -76,6 +80,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Settings.getInstance().getStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -192,7 +197,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // == set up map style ==
         boolean success = googleMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
-                        this, R.raw.style_json));
+                        this, Settings.getInstance().getMapStyle()));
         if (!success) {
             Log.e("MAP STYLE", "Style parsing failed.");
         }
@@ -316,5 +321,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mPokemon = Database.getInstance().getPokemons().get("000");
         }
         isReadyToFight = true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if(resultCode == REQUEST_CODE_REFRESH_VIEW) {
+            this.recreate();
+        }
     }
 }

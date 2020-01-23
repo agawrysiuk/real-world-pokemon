@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.parse.ParseUser;
 
 import agawrysiuk.googlemapspokemonclone.model.Database;
+import agawrysiuk.googlemapspokemonclone.model.Settings;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -16,6 +17,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Settings.getInstance().getStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 

@@ -3,7 +3,6 @@ package agawrysiuk.googlemapspokemonclone;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -18,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -39,15 +39,14 @@ public class MainActivity extends AppCompatActivity {
 
 //        ParseUser.logOut();
 
-        Database.getInstance().downloadDatabase(getResources());
-        Database.getInstance().downloadYourCollection();
-        Log.i("INFO", getResources().getResourceEntryName(R.drawable.pokemon_000));
-
         // == sending information about installation ==
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
         // == if there is user, we move to the map ==
         if (ParseUser.getCurrentUser() != null) {
+            Database.getInstance().downloadYourSettings();
+            Database.getInstance().downloadDatabase(getResources());
+            Database.getInstance().downloadYourCollection();
             transitionToMap();
         }
 
@@ -146,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    createSettings(mUsernameTxt.getText().toString());
                     transitionToMap();
                 } else {
                     mIncorrectTxt.setVisibility(View.VISIBLE);
@@ -169,5 +169,20 @@ public class MainActivity extends AppCompatActivity {
     private void transitionToMap() {
         startActivity(new Intent(MainActivity.this, MapsActivity.class));
         finish();
+    }
+
+    private void createSettings(String username) {
+        try {
+            final ParseObject object = new ParseObject("Settings");
+            object.put("username",username);
+            object.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void getDataFromTheServer() {
+
     }
 }

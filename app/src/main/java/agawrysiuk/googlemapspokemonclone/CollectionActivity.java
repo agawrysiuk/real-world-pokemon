@@ -9,6 +9,7 @@ import java.util.List;
 
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
+import agawrysiuk.googlemapspokemonclone.model.Settings;
 import agawrysiuk.googlemapspokemonclone.views.PokemonListAdapter;
 
 public class CollectionActivity extends AppCompatActivity {
@@ -17,6 +18,7 @@ public class CollectionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Settings.getInstance().getStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
 

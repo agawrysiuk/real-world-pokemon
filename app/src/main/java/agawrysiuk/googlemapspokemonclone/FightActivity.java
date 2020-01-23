@@ -26,6 +26,7 @@ import java.util.Random;
 
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
+import agawrysiuk.googlemapspokemonclone.model.Settings;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 
@@ -56,6 +57,7 @@ public class FightActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Settings.getInstance().getStyle());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fight);
 
