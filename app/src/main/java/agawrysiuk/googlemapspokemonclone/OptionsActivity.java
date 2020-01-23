@@ -56,8 +56,6 @@ public class OptionsActivity extends AppCompatActivity {
                 startActivity(new Intent(OptionsActivity.this,MainActivity.class));
             }
         });
-
-
     }
 
     private View.OnClickListener yetToComeMessage() {
