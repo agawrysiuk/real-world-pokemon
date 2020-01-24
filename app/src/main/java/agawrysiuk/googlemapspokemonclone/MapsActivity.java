@@ -50,6 +50,7 @@ import java.util.Random;
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.model.Settings;
+import agawrysiuk.googlemapspokemonclone.service.MusicManager;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 import static agawrysiuk.googlemapspokemonclone.utils.UtilRequestCode.REQUEST_CODE_REFRESH_VIEW;
@@ -81,6 +82,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(Settings.getInstance().getStyle());
+        if (Settings.getInstance().isSoundOn()) {
+            MusicManager.start(MapsActivity.this,MusicManager.MUSIC_MAP,true);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 

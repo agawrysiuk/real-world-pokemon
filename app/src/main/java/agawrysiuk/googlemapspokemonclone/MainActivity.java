@@ -22,6 +22,8 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import agawrysiuk.googlemapspokemonclone.model.Database;
+import agawrysiuk.googlemapspokemonclone.model.Settings;
+import agawrysiuk.googlemapspokemonclone.service.MusicManager;
 import agawrysiuk.googlemapspokemonclone.utils.UtilParseName;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
             Database.getInstance().downloadDatabase(getResources());
             Database.getInstance().downloadYourCollection();
             transitionToMap();
+        }
+        if (Settings.getInstance().isSoundOn()) {
+            MusicManager.start(this,MusicManager.MUSIC_LOGIN,true);
         }
 
         // == on startup, we want people to log in ==

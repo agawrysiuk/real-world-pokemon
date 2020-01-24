@@ -27,6 +27,7 @@ import java.util.Random;
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.model.Settings;
+import agawrysiuk.googlemapspokemonclone.service.MusicManager;
 import agawrysiuk.googlemapspokemonclone.views.TypeTextView;
 
 
@@ -59,6 +60,9 @@ public class FightActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(Settings.getInstance().getStyle());
         super.onCreate(savedInstanceState);
+        if (Settings.getInstance().isSoundOn()) {
+            MusicManager.start(this,MusicManager.MUSIC_BATTLE,true);
+        }
         setContentView(R.layout.activity_fight);
 
         mPokemon = (Pokemon) getIntent().getSerializableExtra("pokemon");
@@ -303,6 +307,9 @@ public class FightActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
+        if (Settings.getInstance().isSoundOn()) {
+            MusicManager.start(this,MusicManager.MUSIC_MAP,true);
+        }
         overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 }
