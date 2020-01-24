@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import agawrysiuk.googlemapspokemonclone.utils.UtilParseName;
+
 public class Database {
     private static Database instance = new Database();
     private Map<String, Pokemon> pokemons = new HashMap<>();
@@ -38,13 +40,13 @@ public class Database {
 
         // == download all ==
         try {
-            ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("Pokemon");
+            ParseQuery<ParseObject> queryAll = ParseQuery.getQuery(UtilParseName.PARSE_POKEMON_CLASS);
             queryAll.setLimit(151);
             List<ParseObject> list = queryAll.find();
             for (ParseObject object : list) {
-                String number = object.getString("number");
-                String name = object.getString("name");
-                int drawable = object.getInt("drawable");
+                String number = object.getString(UtilParseName.PARSE_POKEMON_NUMBER);
+                String name = object.getString(UtilParseName.PARSE_POKEMON_NAME);
+                int drawable = object.getInt(UtilParseName.PARSE_POKEMON_DRAWABLE); // to be implemented later on
                 pokemons.put(number, new Pokemon(number, name, resources.getIdentifier("pokemon_"+number, "drawable", "agawrysiuk.googlemapspokemonclone")));
             }
             Log.i("INFO", "Download of pokemon data completed");
@@ -56,12 +58,14 @@ public class Database {
 
     public void downloadYourCollection() {
         try {
-            ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Collection");
-            parseQuery.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
+            ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(UtilParseName.PARSE_COLLECTION_CLASS);
+            // == quering only pokemon that belong to this player ==
+            parseQuery.whereEqualTo(UtilParseName.PARSE_USERNAME, ParseUser.getCurrentUser().getUsername());
             List<ParseObject> objects = parseQuery.find();
+            // == adding pokemon to his collection ==
             if (objects.size() > 0) {
                 for (ParseObject object : objects) {
-                    String pokemonId = object.getString("pokemonId");
+                    String pokemonId = object.getString(UtilParseName.PARSE_COLLECTION_POKEMONID);
                     collection.add(pokemons.get(pokemonId));
                 }
             }
@@ -69,43 +73,33 @@ public class Database {
             Log.i("ERROR", "Download stopped.");
             e.printStackTrace();
         }
+        // == sorting for good display ==
         Collections.sort(collection);
-        Log.i("INFO", "Your collection is: "+collection.toString());
     }
 
     public void downloadYourSettings() {
         try {
-            ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Settings");
-            parseQuery.whereEqualTo("username", ParseUser.getCurrentUser().getUsername());
+            ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(UtilParseName.PARSE_SETTINGS_CLASS);
+            parseQuery.whereEqualTo(UtilParseName.PARSE_USERNAME, ParseUser.getCurrentUser().getUsername());
             ParseObject object = parseQuery.getFirst();
 
             Settings settings = Settings.getInstance();
-            Log.i("STYLE", "Dark theme? = " + object.getBoolean("darktheme"));
-            settings.setDarkTheme(object.getBoolean("darktheme"));
-            settings.setSound(object.getBoolean("sound"));
+            settings.setDarkTheme(object.getBoolean(UtilParseName.PARSE_SETTINGS_DARKTHEME));
+            settings.setSound(object.getBoolean(UtilParseName.PARSE_SETTINGS_SOUND));
             settingsId = object.getObjectId();
 
         } catch (ParseException e) {
             Log.i("ERROR", "Settings download stopped.");
             e.printStackTrace();
         }
-
-
-        // 1. calling database
-        // 2. setting up global settings:
-        //     - themes (setTheme before setContentView), findViewById(R.id.mainLayout).invalidate() for autorestart
-        //     - sound on/off
-        //     - sound volume
-        //     - change player front?
-        //     - change password in options activity
     }
 
     public void addPokemonToYourCollection(Pokemon pokemon) {
         if (!collection.contains(pokemon)) {
             collection.add(pokemon);
-            final ParseObject object = new ParseObject("Collection");
-            object.put("username", ParseUser.getCurrentUser().getUsername());
-            object.put("pokemonId",pokemon.getNumber());
+            final ParseObject object = new ParseObject(UtilParseName.PARSE_COLLECTION_CLASS);
+            object.put(UtilParseName.PARSE_USERNAME, ParseUser.getCurrentUser().getUsername());
+            object.put(UtilParseName.PARSE_COLLECTION_POKEMONID,pokemon.getNumber());
             object.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -127,11 +121,11 @@ public class Database {
     }
 
     public void saveSettings() {
-        final ParseObject object = new ParseObject("Settings");
+        final ParseObject object = new ParseObject(UtilParseName.PARSE_SETTINGS_CLASS);
         object.setObjectId(settingsId);
-        object.put("darktheme",Settings.getInstance().isDarkTheme());
-        object.put("sound",Settings.getInstance().isSoundOn());
-        object.put("avatar",Settings.getInstance().getAvatar());
+        object.put(UtilParseName.PARSE_SETTINGS_DARKTHEME,Settings.getInstance().isDarkTheme());
+        object.put(UtilParseName.PARSE_SETTINGS_SOUND,Settings.getInstance().isSoundOn());
+        object.put(UtilParseName.PARSE_SETTINGS_AVATAR,Settings.getInstance().getAvatar());
         object.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

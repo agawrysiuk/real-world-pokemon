@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import agawrysiuk.googlemapspokemonclone.model.Database;
+import agawrysiuk.googlemapspokemonclone.utils.UtilParseName;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -173,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void createSettings(String username) {
         try {
-            final ParseObject object = new ParseObject("Settings");
-            object.put("username",username);
+            final ParseObject object = new ParseObject(UtilParseName.PARSE_SETTINGS_CLASS);
+            object.put(UtilParseName.PARSE_USERNAME,username);
             object.save();
         } catch (ParseException e) {
             e.printStackTrace();
