@@ -253,6 +253,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .title(String.format("%03d",new Random().nextInt(152))) //here we set up what pokemon this is
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pokemon_icon));
         mMap.addMarker(marker);
+        // == starting speech if we click on the marker ==
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -267,6 +268,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                isReadyToFight = true;
                 // == return true for the event to consume the default behavior; false to make default behavior as well ==
                 return true;
+            }
+        });
+        // == hiding speech if it's visible and canceling the fight ==
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (isReadyToFight) {
+                    mTypeTextView.setVisibility(View.INVISIBLE);
+                    mBubbleSpeechView.setVisibility(View.INVISIBLE);
+                    isReadyToFight = false;
+                }
             }
         });
     }
