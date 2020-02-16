@@ -1,4 +1,4 @@
-package agawrysiuk.googlemapspokemonclone;
+package agawrysiuk.googlemapspokemonclone.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import agawrysiuk.googlemapspokemonclone.R;
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Settings;
 import agawrysiuk.googlemapspokemonclone.service.MusicManager;

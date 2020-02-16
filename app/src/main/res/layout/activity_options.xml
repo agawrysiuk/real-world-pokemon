@@ -9,7 +9,7 @@
     android:paddingBottom="24dp"
     android:paddingStart="12dp"
     android:paddingEnd="12dp"
-    tools:context=".OptionsActivity"
+    tools:context=".activities.OptionsActivity"
     android:id="@+id/optionsLayout">
 
     <ImageView

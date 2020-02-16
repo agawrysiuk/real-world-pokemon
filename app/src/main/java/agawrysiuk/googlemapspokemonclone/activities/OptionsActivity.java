@@ -1,4 +1,4 @@
-package agawrysiuk.googlemapspokemonclone;
+package agawrysiuk.googlemapspokemonclone.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.parse.ParseUser;
 import com.suke.widget.SwitchButton;
 
+import agawrysiuk.googlemapspokemonclone.R;
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Settings;
 import libs.mjn.prettydialog.PrettyDialog;

@@ -1,4 +1,4 @@
-package agawrysiuk.googlemapspokemonclone;
+package agawrysiuk.googlemapspokemonclone.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -24,6 +24,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.Arrays;
 import java.util.Random;
 
+import agawrysiuk.googlemapspokemonclone.R;
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.model.Settings;

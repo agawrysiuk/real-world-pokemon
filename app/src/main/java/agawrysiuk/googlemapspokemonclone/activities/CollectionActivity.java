@@ -1,4 +1,4 @@
-package agawrysiuk.googlemapspokemonclone;
+package agawrysiuk.googlemapspokemonclone.activities;
 
 import android.os.Bundle;
 import android.widget.ListView;
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import agawrysiuk.googlemapspokemonclone.R;
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.model.Settings;

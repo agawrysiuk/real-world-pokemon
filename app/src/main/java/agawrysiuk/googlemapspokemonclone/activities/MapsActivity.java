@@ -1,4 +1,4 @@
-package agawrysiuk.googlemapspokemonclone;
+package agawrysiuk.googlemapspokemonclone.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -47,6 +47,7 @@ import com.parse.ParseUser;
 
 import java.util.Random;
 
+import agawrysiuk.googlemapspokemonclone.R;
 import agawrysiuk.googlemapspokemonclone.model.Database;
 import agawrysiuk.googlemapspokemonclone.model.Pokemon;
 import agawrysiuk.googlemapspokemonclone.model.Settings;
